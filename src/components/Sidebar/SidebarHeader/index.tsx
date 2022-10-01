@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import React from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import { MenuIcon } from "../../../utils/icons";
@@ -36,14 +36,18 @@ const StInput = styled.input`
   }
 `;
 
-const SidebarHeader = () => {
+interface IProps {
+  name: string;
+}
+
+const SidebarHeader:FC<IProps> = ({name}) => {
   const { isOpen, onClose, onOpen } = useModal();
   const { isOpen: isModalOpen, onClose: onModalClose, onOpen: onModalOpen } = useModal();
 
   return (
     <StHeader>
       <MenuIcon size={28} className="burger-icon" onClick={onOpen} />
-      <AnimatePresence exitBeforeEnter>{isOpen && <BurgerMenu onClose={onClose} />}</AnimatePresence>
+      <AnimatePresence exitBeforeEnter>{isOpen && <BurgerMenu onClose={onClose} name={name}/>}</AnimatePresence>
       <StInput type="text" placeholder="Search" />
       {isModalOpen && <Modal isOpen={isModalOpen} onClose={onModalClose} title="Some title"></Modal>}
     </StHeader>

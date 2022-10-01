@@ -26,6 +26,6 @@ export const useSidebar = () => {
     isFetching: dialogs.isFetching,
     activeDialogId: id,
     handleSetActiveDialog,
-    authUserId: user?.id,
+    authUser: user,
   };
 };

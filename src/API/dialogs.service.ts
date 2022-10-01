@@ -1,13 +1,14 @@
 import { $authInstance } from ".";
+import { IDialog } from "../types/entities";
 
 export class DialogsService {
-  static async getAll() {
-    const { data } = await $authInstance.get("/dialogs");
+  static async getAll(): Promise<IDialog[]> {
+    const { data } = await $authInstance.get<IDialog[]>("/dialogs");
     return data;
   }
 
-  static async getOne(id: number) {
-    const { data } = await $authInstance.get(`/dialogs/${id}`);
+  static async getById(id: number): Promise<IDialog> {
+    const { data } = await $authInstance.get<IDialog>(`/dialogs/get/${id}`);
     return data;
   }
 

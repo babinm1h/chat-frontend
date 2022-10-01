@@ -3,7 +3,7 @@ const theme = {
     // Common
     common: {
       orange: "#febb02",
-      primaryBlue: "#2481cc",
+      primaryBlue: "#4388B9",
       darkBlue: "#2b09ff",
       btnBorder: "#d9d9d9",
       gray: "#888",
@@ -32,12 +32,15 @@ export const LightTheme = {
     secondary: "#7d7f81",
   },
   background: {
+    icon: "#6B7782",
     primary: "",
     secondary: "",
     tertiary: "",
     hover: "",
     myMessage: "",
     receivedMessage: "",
+    scrollThumb: "",
+    scrollTrack: "",
   },
 };
 
@@ -49,7 +52,10 @@ export const DarkTheme = {
     tertiary: "#242F3D",
     hover: "#26323d",
     myMessage: "#2B5278",
-    receivedMessage: "#182533",
+    receivedMessage: "#1c2b3b",
+    icon: "#6B7782",
+    scrollThumb: "#6B7782",
+    scrollTrack: "#26323d",
   },
   text: {
     primary: "#fff",

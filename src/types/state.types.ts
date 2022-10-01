@@ -3,3 +3,4 @@ export interface IStateSection<T> {
   isFetching: boolean;
   error: string;
 }
+

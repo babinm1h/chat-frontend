@@ -14,5 +14,14 @@ export interface IDialog extends IBaseEntity {
   receiver: IUser;
   creator: IUser;
   creatorId: string;
-  message: any;
+  messages: IMessage[];
+  lastMessage: IMessage | null;
+}
+
+export interface IMessage extends IBaseEntity {
+  text: string;
+  creatorId: number;
+  creator: IUser;
+  dialogId: number;
+  updatedAt: Date;
 }

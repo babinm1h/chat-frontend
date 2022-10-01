@@ -7,5 +7,4 @@ export interface IDialogsState {
 
 export enum DialogActions {
   fetch_all = "dialogs/fetch_all",
-  fetch_one = "dialogs/fetch_one",
 }

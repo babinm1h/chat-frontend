@@ -1,8 +1,26 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IDialog } from "../../../types/entities";
 import { getMessageDate } from "../../../utils/date.helpers";
 import cn from "classnames";
+import { StAvatar } from "../../../styles/common";
+
+const StMessage = styled.p<{ size: number }>`
+  color: ${({ theme }) => theme.currentTheme.text.secondary};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  max-width: ${({ size }) => size && `${size - 5}px`};
+  display: block;
+`;
+
+const StDate = styled.span`
+  color: ${({ theme }) => theme.currentTheme.text.secondary};
+  font-size: 13px;
+`;
 
 const StWrapper = styled.li`
   display: flex;
@@ -16,36 +34,24 @@ const StWrapper = styled.li`
   }
   &.active {
     background-color: ${({ theme }) => theme.currentTheme.background.myMessage};
-  }
-`;
-
-const StAvatar = styled.div`
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background-color: lime;
-  flex-shrink: 0;
-  img {
-    object-fit: cover;
-    width: 100%;
+    ${StMessage} {
+      color: ${({ theme }) => theme.currentTheme.text.primary} !important;
+    }
+    ${StDate} {
+      color: ${({ theme }) => theme.currentTheme.text.primary} !important;
+    }
   }
 `;
 
 const StInfo = styled.div`
   flex: 1 1 auto;
   padding-right: 5px;
-  p {
-    color: ${({ theme }) => theme.currentTheme.text.secondary};
-  }
+  display: flex;
+  flex-direction: column;
 `;
 
 const StName = styled.div`
   color: ${({ theme }) => theme.currentTheme.text.primary};
-`;
-
-const StDate = styled.span`
-  color: ${({ theme }) => theme.currentTheme.text.secondary};
-  font-size: 14px;
 `;
 
 const StHeader = styled.div`
@@ -60,10 +66,19 @@ interface IProps {
   dialog: IDialog;
   activeDialogId?: string;
   handleSetActiveDialog: (id: number) => void;
-  authUserId?: number;
+  authUserId: number;
 }
 
 const SidebarUser: FC<IProps> = ({ dialog, activeDialogId, handleSetActiveDialog, authUserId }) => {
+  const [size, setSize] = useState(0);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (wrapperRef.current) {
+      setSize(wrapperRef.current?.clientWidth);
+    }
+  }, [wrapperRef]);
+
   const lastMessageDate = getMessageDate(dialog.createdAt);
 
   const getReceiverName = () => {
@@ -78,13 +93,13 @@ const SidebarUser: FC<IProps> = ({ dialog, activeDialogId, handleSetActiveDialog
         active: activeDialogId && +activeDialogId === dialog.id,
       })}
     >
-      <StAvatar></StAvatar>
-      <StInfo>
+      <StAvatar size="medium"></StAvatar>
+      <StInfo ref={wrapperRef}>
         <StHeader>
           <StName>{getReceiverName()}</StName>
           <StDate>{lastMessageDate}</StDate>
         </StHeader>
-        <p>{dialog.message}</p>
+        <StMessage size={size}>{dialog.lastMessage?.text}</StMessage>
       </StInfo>
     </StWrapper>
   );

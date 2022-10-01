@@ -16,12 +16,15 @@ declare module "styled-components" {
     };
     currentTheme: {
       background: {
+        icon: string;
         primary: string;
         secondary: string;
         tertiary: string;
         hover: string;
         myMessage: string;
         receivedMessage: string;
+        scrollThumb: string;
+        scrollTrack: string;
       };
       text: {
         primary: string;

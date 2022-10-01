@@ -1,15 +1,8 @@
 import React from "react";
-import styled from "styled-components";
-
-const StWrapper = styled.div`
-  display: flex;
-  height: 100%;
-  width: 100%;
-  color: white;
-`;
+import Dialog from "../../components/Dialog";
 
 const DialogPage = () => {
-  return <StWrapper>Conver</StWrapper>;
+  return <Dialog />;
 };
 
 export default DialogPage;
