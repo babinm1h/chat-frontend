@@ -1,0 +1,86 @@
+@import "../../../styles/variables";
+.stage {
+  margin: 0 18px;
+}
+.dot-falling {
+  position: relative;
+  left: -9999px;
+  width: 8px;
+  height: 8px;
+  border-radius: 5px;
+  background-color: $lightWhite;
+  color: $lightWhite;
+  box-shadow: 9999px 0 0 0 $lightWhite;
+  animation: dotFalling 1s infinite linear;
+  animation-delay: 0.1s;
+}
+
+.dot-falling::before,
+.dot-falling::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-falling::before {
+  width: 8px;
+  height: 8px;
+  border-radius: 5px;
+  background-color: $lightWhite;
+  color: $lightWhite;
+  animation: dotFallingBefore 1s infinite linear;
+  animation-delay: 0s;
+}
+
+.dot-falling::after {
+  width: 8px;
+  height: 8px;
+  border-radius: 5px;
+  background-color: $lightWhite;
+  color: $lightWhite;
+  animation: dotFallingAfter 1s infinite linear;
+  animation-delay: 0.2s;
+}
+
+@keyframes dotFalling {
+  0% {
+    box-shadow: 9999px -5px 0 0 rgba(152, 128, 255, 0);
+  }
+  25%,
+  50%,
+  75% {
+    box-shadow: 9999px 0 0 0 $lightWhite;
+  }
+  100% {
+    box-shadow: 9999px 5px 0 0 rgba(152, 128, 255, 0);
+  }
+}
+
+@keyframes dotFallingBefore {
+  0% {
+    box-shadow: 9984px -5px 0 0 rgba(152, 128, 255, 0);
+  }
+  25%,
+  50%,
+  75% {
+    box-shadow: 9984px 0 0 0 $lightWhite;
+  }
+  100% {
+    box-shadow: 9984px 5px 0 0 rgba(152, 128, 255, 0);
+  }
+}
+
+@keyframes dotFallingAfter {
+  0% {
+    box-shadow: 10014px -5px 0 0 rgba(152, 128, 255, 0);
+  }
+  25%,
+  50%,
+  75% {
+    box-shadow: 10014px 0 0 0 $lightWhite;
+  }
+  100% {
+    box-shadow: 10014px 5px 0 0 rgba(152, 128, 255, 0);
+  }
+}

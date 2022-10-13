@@ -79,7 +79,7 @@ const SidebarUser: FC<IProps> = ({ dialog, activeDialogId, handleSetActiveDialog
     }
   }, [wrapperRef]);
 
-  const lastMessageDate = getMessageDate(dialog.createdAt);
+  const lastMessageDate = getMessageDate(dialog.lastMessage?.createdAt);
 
   const getReceiverName = () => {
     const receiver = authUserId === dialog.receiverId ? dialog.creator : dialog.receiver;

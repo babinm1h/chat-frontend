@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 
-export const getMessageDate = (date: Date) => {
-  return dayjs(date).format("H:MM");
+export const getMessageDate = (date?: Date) => {
+  if (!date) return;
+  return dayjs(date).format("HH:mm");
 };

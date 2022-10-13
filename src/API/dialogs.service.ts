@@ -11,6 +11,4 @@ export class DialogsService {
     const { data } = await $authInstance.get<IDialog>(`/dialogs/get/${id}`);
     return data;
   }
-
-  static async create(receiverId: number) {}
 }

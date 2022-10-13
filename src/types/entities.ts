@@ -1,6 +1,7 @@
 interface IBaseEntity {
   id: number;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IUser extends IBaseEntity {

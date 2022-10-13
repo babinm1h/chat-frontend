@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getTokenCookie } from "../utils/cookie.helpers";
 
-export const serverUrl = "http://localhost:7777";
+export const serverUrl = process.env.REACT_APP_API_URL || "http://localhost:7777";
 
 export const $instance = axios.create({
   withCredentials: true,

@@ -18,16 +18,23 @@ const StWrapper = styled.div`
   overflow-y: auto;
   flex: 1 1 auto;
   &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.currentTheme.background.scrollThumb};
+    background-color: transparent;
     width: 6px;
     border-radius: 999px;
-    opacity: 0.2;
   }
   &::-webkit-scrollbar {
     width: 6px;
   }
   &::-webkit-scrollbar-track {
-    background-color: ${({ theme }) => theme.currentTheme.background.scrollTrack};
+    background-color: transparent;
+  }
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.currentTheme.background.scrollThumb};
+    }
+    &::-webkit-scrollbar-track {
+      background-color: ${({ theme }) => theme.currentTheme.background.scrollTrack};
+    }
   }
 `;
 
