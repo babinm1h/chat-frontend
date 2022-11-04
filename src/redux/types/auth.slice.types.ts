@@ -4,7 +4,7 @@ export interface IAuthState {
   user: null | IUser;
   isProcessing: boolean;
   loginError: string;
-  registerError: string;
+  registerError: string | string[];
   isCheckingAuth: boolean;
   isAuth: boolean;
 }

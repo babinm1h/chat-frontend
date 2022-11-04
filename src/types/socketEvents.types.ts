@@ -2,9 +2,7 @@ export enum SocketEvents {
   createMsg = "message:create",
   deleteMsg = "message:delete",
   receiveMsg = "message:receive",
-
-  connect = "connected",
-  disconnect = "disconnect",
+  updateMsg = "message:update",
 
   userStartTyping = "user:startTyping",
   userStopTyping = "user:stopTyping",
@@ -14,4 +12,7 @@ export enum SocketEvents {
 
   createDialog = "dialog:create",
   deleteDialog = "dialog:delete",
+
+  disconnect = "disconnect",
+  connect = "connect",
 }

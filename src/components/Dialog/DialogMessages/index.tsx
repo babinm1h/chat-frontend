@@ -1,5 +1,6 @@
-import React, { FC } from "react";
+import { FC, useRef } from "react";
 import styled from "styled-components";
+import { scrollbarMixin } from "../../../styles/common/mixins";
 import { IMessage, IUser } from "../../../types/entities";
 import MessageItem from "./MessageItem";
 
@@ -17,35 +18,22 @@ const StWrapper = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
   flex: 1 1 auto;
-  &::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    width: 6px;
-    border-radius: 999px;
-  }
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-  &:hover {
-    &::-webkit-scrollbar-thumb {
-      background-color: ${({ theme }) => theme.currentTheme.background.scrollThumb};
-    }
-    &::-webkit-scrollbar-track {
-      background-color: ${({ theme }) => theme.currentTheme.background.scrollTrack};
-    }
-  }
+  position: relative;
+  ${scrollbarMixin()};
+  touch-action: none;
 `;
 
 interface IProps {
   messages: IMessage[];
   user: IUser | null;
+  messageContextMenuIsOpen: boolean;
 }
 
-const DialogMessages: FC<IProps> = ({ messages, user }) => {
+const DialogMessages: FC<IProps> = ({ messages, user, messageContextMenuIsOpen }) => {
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
   return (
-    <StWrapper>
+    <StWrapper ref={scrollAreaRef}>
       <StMessages>
         {messages.map((msg, idx, arr) => (
           <MessageItem
@@ -53,6 +41,7 @@ const DialogMessages: FC<IProps> = ({ messages, user }) => {
             message={msg}
             user={user}
             repeated={arr[idx + 1]?.creatorId === msg.creatorId}
+            scrollAreaRef={scrollAreaRef}
           />
         ))}
       </StMessages>

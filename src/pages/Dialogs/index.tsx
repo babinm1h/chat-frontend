@@ -1,20 +1,13 @@
 import React, { useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import styled from "styled-components";
-import Sidebar from "../../components/Sidebar";
+import Mainlayout from "../../components/layouts/Mainlayout";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { useSocket } from "../../hooks/useSocket";
-import { addDialog, addMessage } from "../../redux/slices/dialogs.slice";
+import { addDialog, addMessage, deleteMessage, updateMessage } from "../../redux/slices/dialogs.slice";
 import { IDialog, IMessage } from "../../types/entities";
 import { SocketEvents } from "../../types/socketEvents.types";
-
-const StWrapper = styled.div`
-  display: flex;
-  height: 100%;
-  width: 100%;
-  color: ${({ theme }) => theme.currentTheme.text.primary};
-`;
 
 const StEmpty = styled.div`
   display: flex;
@@ -32,13 +25,21 @@ const DialogsPage = () => {
   const socket = useSocket();
 
   useEffect(() => {
+    socket.connect();
     socket.on(SocketEvents.receiveMsg, (msg: IMessage) => {
       dispatch(addMessage(msg));
     });
 
     socket.on(SocketEvents.createDialog, ({ dialog }: { dialog: IDialog }) => {
-      console.log(dialog);
       dispatch(addDialog(dialog));
+    });
+
+    socket.on(SocketEvents.deleteMsg, (msg: IMessage) => {
+      dispatch(deleteMessage(msg));
+    });
+
+    socket.on(SocketEvents.updateMsg, (msg: IMessage) => {
+      dispatch(updateMessage(msg));
     });
 
     return () => {
@@ -48,12 +49,11 @@ const DialogsPage = () => {
   }, [socket]);
 
   return (
-    <StWrapper>
-      <Sidebar />
+    <Mainlayout>
       <StEmpty>
         <Outlet />
       </StEmpty>
-    </StWrapper>
+    </Mainlayout>
   );
 };
 

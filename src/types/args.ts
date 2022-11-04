@@ -5,3 +5,5 @@ export type TRegisterArgs = Pick<IUser, "email" | "firstName" | "lastName"> & { 
 export type TLoginArgs = Pick<TRegisterArgs, "email" | "password">;
 
 export type TCreateMessageArgs = Pick<IMessage, "dialogId" | "text">;
+
+export type TUpdateMessageArgs = Pick<IMessage, "id" | "text">;

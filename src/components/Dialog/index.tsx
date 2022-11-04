@@ -43,7 +43,14 @@ const StTyping = styled.div`
 `;
 
 const Dialog = () => {
-  const { activeDialog, isActiveDialogFetching, activeDialogError, user, typingUser } = useDialog();
+  const {
+    activeDialog,
+    isActiveDialogFetching,
+    user,
+    typingUser,
+    editableMessage,
+    messageContextMenuIsOpen,
+  } = useDialog();
 
   if (!activeDialog || isActiveDialogFetching) {
     return <>Loading</>;
@@ -67,8 +74,12 @@ const Dialog = () => {
           </StLastOnline>
         </StReceiver>
       </StHeader>
-      <DialogMessages messages={activeDialog.messages} user={user} />
-      <DialogForm user={user} />
+      <DialogMessages
+        messages={activeDialog.messages}
+        user={user}
+        messageContextMenuIsOpen={messageContextMenuIsOpen}
+      />
+      <DialogForm user={user} editableMessage={editableMessage} />
     </StWrapper>
   );
 };

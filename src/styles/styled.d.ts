@@ -11,6 +11,7 @@ declare module "styled-components" {
         darkBlue: string;
         green: string;
         blueHover: string;
+        blueActive: string;
         semitransparentBlack: string;
       };
     };
@@ -25,6 +26,7 @@ declare module "styled-components" {
         receivedMessage: string;
         scrollThumb: string;
         scrollTrack: string;
+        active: string;
       };
       text: {
         primary: string;
@@ -38,7 +40,9 @@ declare module "styled-components" {
       xs: string;
       md: string;
     };
-    shadow: {};
+    shadow: {
+      button: string;
+    };
   }
 }
 

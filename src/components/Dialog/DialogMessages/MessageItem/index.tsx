@@ -1,9 +1,11 @@
-import React, { FC } from "react";
+import { FC, RefObject } from "react";
 import styled from "styled-components";
 import { IMessage, IUser } from "../../../../types/entities";
 import cn from "classnames";
 import { StAvatar } from "../../../../styles/common";
 import { getMessageDate } from "../../../../utils/date.helpers";
+import { useContextMenu } from "../../../../hooks/useContextMenu";
+import MessageContextMenu from "../MessageContextMenu";
 
 const StMessage = styled.div<{ repeated: boolean }>`
   padding: 10px 10px 2px 10px;
@@ -60,6 +62,7 @@ const StWrapper = styled.div<{ isMy: boolean }>`
   display: flex;
   gap: 15px;
   flex-direction: ${({ isMy }) => (isMy ? "row-reverse" : "row")};
+  position: relative;
 `;
 
 const StAvatarWrapper = styled.div<{ repeated?: boolean }>`
@@ -84,49 +87,66 @@ interface IProps {
   message: IMessage;
   user: IUser | null;
   repeated: boolean;
+  scrollAreaRef: RefObject<HTMLDivElement>;
 }
 
-const MessageItem: FC<IProps> = ({ message, user, repeated }) => {
+const MessageItem: FC<IProps> = ({ message, user, repeated, scrollAreaRef }) => {
+  const { coords, onContextMenu, showMenu, menuRef, handleClose } = useContextMenu(200);
   const isMyMsg = user?.id === message.creatorId;
 
-  const messageWithoutAvatar = () => {
-    return (
-      <StWrapper isMy={isMyMsg}>
-        <StAvatarWrapper repeated={repeated}>
-          <StAvatar size="small"></StAvatar>
-        </StAvatarWrapper>
-        <StMessage
-          repeated={repeated}
-          key={message.id}
-          className={cn("", {
-            myMessage: isMyMsg,
-          })}
-        >
-          <StText>{message.text}</StText>
-          <StDate isMy={isMyMsg}>{getMessageDate(message.createdAt)}</StDate>
-        </StMessage>
-      </StWrapper>
-    );
+  const formatedMessage = () => {
+    if (repeated) {
+      return (
+        <>
+          <StAvatarWrapper repeated={repeated} onContextMenu={(e) => e.stopPropagation()}>
+            <StAvatar size="small"></StAvatar>
+          </StAvatarWrapper>
+          <StMessage
+            repeated={repeated}
+            key={message.id}
+            className={cn("", {
+              myMessage: isMyMsg,
+            })}
+          >
+            <StText>{message.text}</StText>
+            <StDate isMy={isMyMsg}>{getMessageDate(message.createdAt)}</StDate>
+          </StMessage>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <StAvatarWrapper onContextMenu={(e) => e.stopPropagation()}>
+            <StAvatar size="small"></StAvatar>
+          </StAvatarWrapper>
+          <StMessage
+            repeated={repeated}
+            key={message.id}
+            className={cn("", {
+              myMessage: isMyMsg,
+            })}
+          >
+            <StText>{message.text}</StText>
+            <StDate isMy={isMyMsg}>{getMessageDate(message.createdAt)}</StDate>
+          </StMessage>
+        </>
+      );
+    }
   };
-  if (repeated) {
-    return messageWithoutAvatar();
-  }
 
   return (
-    <StWrapper isMy={isMyMsg}>
-      <StAvatarWrapper>
-        <StAvatar size="small"></StAvatar>
-      </StAvatarWrapper>
-      <StMessage
-        repeated={repeated}
-        key={message.id}
-        className={cn("", {
-          myMessage: isMyMsg,
-        })}
-      >
-        <StText>{message.text}</StText>
-        <StDate isMy={isMyMsg}>{getMessageDate(message.createdAt)}</StDate>
-      </StMessage>
+    <StWrapper isMy={isMyMsg} onContextMenu={onContextMenu}>
+      {formatedMessage()}
+      <MessageContextMenu
+        handleClose={handleClose}
+        message={message}
+        left={coords.x as number}
+        top={coords.y as number}
+        showMenu={showMenu}
+        menuRef={menuRef}
+        isMy={isMyMsg}
+        scrollAreaRef={scrollAreaRef}
+      />
     </StWrapper>
   );
 };

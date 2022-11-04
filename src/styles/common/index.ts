@@ -1,7 +1,6 @@
-import { motion } from "framer-motion";
 import styled from "styled-components";
 
-export const StOverlay = styled(motion.div)`
+export const StOverlay = styled.div`
   background-color: ${({ theme }) => theme.colors.common.semitransparentBlack};
   width: 100%;
   height: 100%;
@@ -24,5 +23,53 @@ export const StAvatar = styled.div<{ size: "small" | "big" | "medium" }>`
   img {
     object-fit: cover;
     width: 100%;
+  }
+`;
+export const StMenuItem = styled.li`
+  display: flex;
+  gap: 10px;
+  padding: 10px 20px;
+  transition: all 0.2s ease-in;
+  cursor: pointer;
+  color: ${({ theme }) => theme.currentTheme.text.primary};
+  a {
+    color: ${({ theme }) => theme.currentTheme.text.primary};
+  }
+  &:hover {
+    background-color: ${({ theme }) => theme.currentTheme.background.hover};
+  }
+  &.active {
+    background-color: ${({ theme }) => theme.currentTheme.background.hover};
+  }
+  &:active {
+    background-color: ${({ theme }) => theme.currentTheme.background.active};
+  }
+  &.logout {
+    color: red;
+  }
+`;
+
+export const StContextMenuItem = styled.div`
+  display: flex;
+  gap: 10px;
+  padding: 5px 20px;
+  transition: all 0.2s ease-in;
+  border-radius: 4px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.currentTheme.text.primary};
+  a {
+    color: ${({ theme }) => theme.currentTheme.text.primary};
+  }
+  &:hover {
+    background-color: ${({ theme }) => theme.currentTheme.background.hover};
+  }
+  &.active {
+    background-color: ${({ theme }) => theme.currentTheme.background.hover};
+  }
+  &:active {
+    background-color: ${({ theme }) => theme.currentTheme.background.active};
+  }
+  &.logout {
+    color: red;
   }
 `;

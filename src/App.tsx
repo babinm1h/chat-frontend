@@ -5,7 +5,9 @@ import { useAppDispatch } from "./hooks/useAppDispatch";
 import { useAppSelector } from "./hooks/useAppSelector";
 import { checkAuth } from "./redux/thunks/auth.thunks";
 import { ThemeTypes } from "./styles/styled";
+import { ToastContainer } from "react-toastify";
 import theme, { DarkTheme, LightTheme } from "./styles/theme";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -30,6 +32,18 @@ const App = () => {
   return (
     <ThemeProvider theme={themeSettings as DefaultTheme}>
       <AppRoutes />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </ThemeProvider>
   );
 };

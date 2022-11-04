@@ -21,17 +21,6 @@ export const fetchDialogById = createAsyncThunk(DialogActions.fetch_current, asy
   }
 });
 
-export const createMessage = createAsyncThunk(
-  DialogActions.create_message,
-  async (payload: TCreateMessageArgs, thunk) => {
-    try {
-      return await MessagesService.createMsg(payload);
-    } catch (err: any) {
-      return thunk.rejectWithValue(err.response?.data.message);
-    }
-  }
-);
-
 export const searchUsers = createAsyncThunk(
   DialogActions.search_users,
   async (searchQuery: string, thunk) => {
@@ -42,3 +31,5 @@ export const searchUsers = createAsyncThunk(
     }
   }
 );
+
+

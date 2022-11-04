@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IDialog, IMessage, IUser } from "../../types/entities";
-import { createMessage, fetchAllDialogs, fetchDialogById, searchUsers } from "../thunks/dialogs.thunks";
+import { fetchAllDialogs, fetchDialogById, searchUsers } from "../thunks/dialogs.thunks";
 import { IDialogsState } from "../types/dialogs.slice.types";
 
 const initialState: IDialogsState = {
@@ -12,6 +12,8 @@ const initialState: IDialogsState = {
   activeDialog: null,
   activeDialogError: "",
   isActiveDialogFetching: true,
+  editableMessage: null,
+  messageContextMenuIsOpen: false,
   // поиск пользователей / диалогов
   foundUsers: [],
   isSearching: false,
@@ -24,7 +26,7 @@ const dialogsSlice = createSlice({
   reducers: {
     addMessage(state, action: PayloadAction<IMessage>) {
       const dialog = state.dialogs.find((d) => d.id === action.payload.dialogId);
-      if (action.payload.dialogId === state.activeDialog?.id) {
+      if (state.activeDialog?.id === action.payload.dialogId) {
         state.activeDialog.messages.push(action.payload);
       }
       if (dialog) {
@@ -35,6 +37,35 @@ const dialogsSlice = createSlice({
         state.dialogs = [dialog, ...state.dialogs];
       }
     },
+    deleteMessage(state, action: PayloadAction<IMessage>) {
+      const dialog = state.dialogs.find((d) => d.id === action.payload.dialogId);
+      if (dialog) {
+        dialog.messages = dialog.messages.filter((m) => m.id !== action.payload.id);
+        if (state.activeDialog?.id === action.payload.dialogId) {
+          state.activeDialog.messages = state.activeDialog.messages.filter((m) => m.id !== action.payload.id);
+          if (dialog?.lastMessage?.id === action.payload.id) {
+            dialog.lastMessage = dialog.messages[dialog.messages.length - 1];
+          }
+        }
+      }
+    },
+    updateMessage(state, action: PayloadAction<IMessage>) {
+      const dialog = state.dialogs.find((d) => d.id === action.payload.dialogId);
+      if (dialog) {
+        const msg = dialog.messages.find((m) => m.id === action.payload.id);
+        if (msg) msg.text = action.payload.text;
+        if (state.activeDialog?.id === action.payload.dialogId) {
+          const activeDialogMsg = state.activeDialog.messages.find((m) => m.id === action.payload.id);
+          if (activeDialogMsg) activeDialogMsg.text = action.payload.text;
+        }
+        if (dialog.lastMessage?.id === action.payload.id) {
+          dialog.lastMessage = action.payload;
+        }
+      }
+    },
+    setEditableMessage(state, action: PayloadAction<null | IMessage>) {
+      state.editableMessage = action.payload;
+    },
     setSearchMode(state, action: PayloadAction<boolean>) {
       state.searchMode = action.payload;
     },
@@ -43,6 +74,9 @@ const dialogsSlice = createSlice({
     },
     addDialog(state, action: PayloadAction<IDialog>) {
       if (!state.dialogs.find((d) => d.id === action.payload.id)) state.dialogs.push(action.payload);
+    },
+    setMessageContextMenuIsOpen(state, action: PayloadAction<boolean>) {
+      state.messageContextMenuIsOpen = action.payload;
     },
   },
   extraReducers: {
@@ -78,11 +112,6 @@ const dialogsSlice = createSlice({
       state.isActiveDialogFetching = true;
     },
 
-    // Oтправить сообщение
-    [createMessage.fulfilled.type]: (state, action: PayloadAction<IMessage>) => {},
-    [createMessage.pending.type]: (state, action: PayloadAction<IMessage>) => {},
-    [createMessage.rejected.type]: (state, action: PayloadAction<IMessage>) => {},
-
     // Поиск юзеров
     [searchUsers.fulfilled.type]: (state, action: PayloadAction<IUser[]>) => {
       state.foundUsers = action.payload;
@@ -100,4 +129,13 @@ const dialogsSlice = createSlice({
 });
 
 export default dialogsSlice.reducer;
-export const { addMessage, setSearchMode, addDialog } = dialogsSlice.actions;
+export const {
+  addMessage,
+  setSearchMode,
+  addDialog,
+  deleteMessage,
+  setEditableMessage,
+  setDialogs,
+  updateMessage,
+  setMessageContextMenuIsOpen,
+} = dialogsSlice.actions;

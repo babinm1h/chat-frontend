@@ -1,0 +1,88 @@
+@import "../../../styles/mixins.scss";
+@import "../../../styles/variables.scss";
+.select {
+    &__control {
+        background-color: #242f3d !important;
+        border: none !important;
+        border-radius: 2px 2px 0 0 !important;
+        box-shadow: none !important;
+        cursor: text !important;
+        min-height: 40px !important;
+        &::after {
+            content: "";
+            width: 100%;
+            height: 2px;
+            background-color: $blue;
+            position: absolute;
+            display: block;
+            bottom: 0;
+            left: 0;
+            transform: scaleX(0);
+            transition: all 0.2s ease-in-out;
+        }
+        &::before {
+            content: "";
+            width: 100%;
+            height: 1px;
+            background-color: #6b7782;
+            position: absolute;
+            display: block;
+            bottom: 0;
+            left: 0;
+        }
+        &--menu-is-open {
+            &::after {
+                transform: scaleX(1);
+            }
+        }
+    }
+    &__single-value {
+        color: #fff !important;
+    }
+
+    &__menu {
+        background-color: #242f3d !important;
+        color: #fff !important;
+        animation: menu 0.2s ease-in-out;
+    }
+    &__option {
+        cursor: pointer !important;
+        &--is-focused {
+            background-color: #26323d !important;
+        }
+    }
+    &__input-container {
+        color: #fff !important;
+    }
+    &__indicator-separator {
+        display: none;
+    }
+    &__dropdown-indicator {
+        cursor: pointer !important;
+        background-color: rgba(#000, 0.2) !important;
+        padding: 1px !important;
+        border-radius: 4px !important;
+        margin: 0 10px;
+        color: #6b7782 !important;
+        &:hover {
+            color: #fff !important;
+        }
+    }
+    &__menu-list {
+        @include customScroll(#4b545c);
+    }
+}
+
+@keyframes menu {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

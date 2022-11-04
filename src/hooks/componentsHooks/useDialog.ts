@@ -8,15 +8,24 @@ import { useSocket } from "../useSocket";
 
 export const useDialog = () => {
   const [typingUser, setTypingUser] = useState("");
-
   const dispatch = useAppDispatch();
-  const { activeDialog, isActiveDialogFetching, activeDialogError } = useAppSelector(
-    (state) => state.dialogs
-  );
+  const {
+    activeDialog,
+    isActiveDialogFetching,
+    activeDialogError,
+    editableMessage,
+    messageContextMenuIsOpen,
+  } = useAppSelector((state) => state.dialogs);
   const { user } = useAppSelector((state) => state.auth);
 
   const socket = useSocket();
   const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchDialogById(+id));
+    }
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -35,11 +44,13 @@ export const useDialog = () => {
     };
   }, [id]);
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchDialogById(+id));
-    }
-  }, [id]);
-
-  return { activeDialog, isActiveDialogFetching, activeDialogError, user, typingUser };
+  return {
+    activeDialog,
+    isActiveDialogFetching,
+    activeDialogError,
+    user,
+    typingUser,
+    editableMessage,
+    messageContextMenuIsOpen,
+  };
 };

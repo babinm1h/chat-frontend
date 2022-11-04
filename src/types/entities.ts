@@ -4,6 +4,8 @@ interface IBaseEntity {
   updatedAt: Date;
 }
 
+export type TGender = "male" | "female";
+
 export interface IUser extends IBaseEntity {
   firstName: string;
   lastName: string;

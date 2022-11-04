@@ -9,7 +9,8 @@ const theme = {
       gray: "#888",
       green: "#008009",
       blueHover: `#0070cb`,
-      semitransparentBlack: `rgba(0,0,0, 0.5)`,
+      blueActive: "#0062b3",
+      semitransparentBlack: `rgba(0,0,0, 0.45)`,
     },
   },
 
@@ -21,7 +22,10 @@ const theme = {
     xs: "13px",
   },
 
-  shadow: {},
+  shadow: {
+    button: `0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%),
+    0px 1px 18px 0px rgb(0 0 0 / 12%)`,
+  },
 };
 
 export default theme;
@@ -41,12 +45,12 @@ export const LightTheme = {
     receivedMessage: "",
     scrollThumb: "",
     scrollTrack: "",
+    active: "",
   },
 };
 
 export const DarkTheme = {
   background: {
-    // primary: "#0b0b0b",
     primary: "#0E1621",
     secondary: "#17212B",
     tertiary: "#242F3D",
@@ -54,8 +58,9 @@ export const DarkTheme = {
     myMessage: "#2B5278",
     receivedMessage: "#1c2b3b",
     icon: "#6B7782",
-    scrollThumb: "#6B7782",
+    scrollThumb: "#4b545c",
     scrollTrack: "#26323d",
+    active: "#2F3D4B",
   },
   text: {
     primary: "#fff",

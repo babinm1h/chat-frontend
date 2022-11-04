@@ -3,6 +3,8 @@ import styled from "styled-components";
 export const StForm = styled.form`
   max-width: 800px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const StField = styled.div`
@@ -22,29 +24,16 @@ export const StInput = styled.input`
   padding: 12px 10px;
   color: ${({ theme }) => theme.currentTheme.text.primary};
   width: 100%;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: 2px 2px 0 0;
+  font-size: 1rem;
+  position: relative;
+  display: inline-flex;
 `;
 
-export const StBtn = styled.button`
-  color: ${({ theme }) => theme.currentTheme.text.primary};
-  background-color: ${({ theme }) => theme.colors.common.primaryBlue};
-  width: 100%;
-  padding: 15px 0;
-  border-radius: 6px;
-  font-weight: bold;
-  transition: all 0.3s ease-in-out;
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.common.blueHover};
-  }
-  &:disabled {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-`;
+
 
 export const StBtnBlock = styled.div`
-  margin-top: 15px;
+  margin-top: 10px;
   display: flex;
   gap: 5px;
   flex-direction: column;
@@ -52,7 +41,7 @@ export const StBtnBlock = styled.div`
 
 export const StText = styled.div`
   color: ${({ theme }) => theme.currentTheme.text.primary};
-  margin-top: 10px;
+  margin: 8px 0;
   a {
     text-decoration: underline;
     color: ${({ theme }) => theme.currentTheme.text.primary};
@@ -70,4 +59,9 @@ export const StDoubleFields = styled.div`
   align-items: center;
   gap: 10px;
   width: 100%;
+`;
+
+export const StCommonError = styled.div`
+  margin: 5px 0;
+  color: red;
 `;
