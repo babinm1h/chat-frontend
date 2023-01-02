@@ -1,7 +1,7 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthService } from "../../API/auth.service";
-import { TLoginArgs, TRegisterArgs } from "../../types/args";
-import { AuthActions } from "../types/auth.slice.types";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AuthService } from '../../API/auth.service';
+import { TLoginArgs, TRegisterArgs } from '../../types/args';
+import { AuthActions } from '../types/auth.slice.types';
 
 export const registrate = createAsyncThunk(AuthActions.register, async (args: TRegisterArgs, thunk) => {
   try {

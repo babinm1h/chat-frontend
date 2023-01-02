@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import LoginForm from "../../components/forms/AuthForms/LoginForm";
+import React from 'react';
+import styled from 'styled-components';
+import LoginForm from '../../components/forms/AuthForms/LoginForm';
 
 const StWrapper = styled.div`
   width: 100%;

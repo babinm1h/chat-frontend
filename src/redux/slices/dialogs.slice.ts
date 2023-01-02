@@ -1,28 +1,40 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IDialog, IMessage, IUser } from "../../types/entities";
-import { fetchAllDialogs, fetchDialogById, searchUsers } from "../thunks/dialogs.thunks";
-import { IDialogsState } from "../types/dialogs.slice.types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IDialog, IGroupDialog, IMessage, IUser } from '../../types/entities';
+import {
+  fetchAllDialogs,
+  fetchAllGroupDialogs,
+  fetchDialogById,
+  groupDialogCreationSearchUsers,
+  searchUsers,
+} from '../thunks/dialogs.thunks';
+import { IDialogsState } from '../types/dialogs.slice.types';
 
 const initialState: IDialogsState = {
   // все диалоги
-  dialogsError: "",
+  dialogsError: '',
   isDialogsFetching: true,
   dialogs: [],
   // выбранный диалог
   activeDialog: null,
-  activeDialogError: "",
+  activeDialogError: '',
   isActiveDialogFetching: true,
   editableMessage: null,
-  messageContextMenuIsOpen: false,
+  replyToMsg: null,
   // поиск пользователей / диалогов
   foundUsers: [],
   isSearching: false,
   searchMode: false,
+  // group dialogs
+  groupDialogCreationFoundUsers: [],
+  groupDialogCreationIsSearching: false,
+  groupDialogs: [],
+  activeGroupDialog: null,
+  isGroupDialogsFetching: false,
 };
 
 const dialogsSlice = createSlice({
   initialState,
-  name: "dialogs",
+  name: 'dialogs',
   reducers: {
     addMessage(state, action: PayloadAction<IMessage>) {
       const dialog = state.dialogs.find((d) => d.id === action.payload.dialogId);
@@ -63,6 +75,20 @@ const dialogsSlice = createSlice({
         }
       }
     },
+
+    readMessage(state, action: PayloadAction<Pick<IMessage, 'dialogId' | 'id'>>) {
+      const dialog = state.dialogs.find((d) => d.id === action.payload.dialogId);
+      if (dialog) {
+        const msg = dialog.messages.find((m) => m.id === action.payload.id);
+        if (msg) msg.readed = true;
+
+        if (state.activeDialog?.id === action.payload.dialogId) {
+          const activeDialogMsg = state.activeDialog.messages.find((m) => m.id === action.payload.id);
+          if (activeDialogMsg) activeDialogMsg.readed = true;
+        }
+      }
+    },
+
     setEditableMessage(state, action: PayloadAction<null | IMessage>) {
       state.editableMessage = action.payload;
     },
@@ -75,22 +101,48 @@ const dialogsSlice = createSlice({
     addDialog(state, action: PayloadAction<IDialog>) {
       if (!state.dialogs.find((d) => d.id === action.payload.id)) state.dialogs.push(action.payload);
     },
-    setMessageContextMenuIsOpen(state, action: PayloadAction<boolean>) {
-      state.messageContextMenuIsOpen = action.payload;
+    setReplyToMsg(state, action: PayloadAction<IMessage | null>) {
+      state.replyToMsg = action.payload;
+    },
+    setGroupDialogCreationFoundUsers(state, action: PayloadAction<IUser[]>) {
+      state.groupDialogCreationFoundUsers = action.payload;
     },
   },
   extraReducers: {
+    // Получить список group диалогов
+    [fetchAllGroupDialogs.fulfilled.type]: (state, action: PayloadAction<IGroupDialog[]>) => {
+      state.isGroupDialogsFetching = false;
+      state.groupDialogs = action.payload;
+    },
+    [fetchAllGroupDialogs.pending.type]: (state, action) => {
+      state.isGroupDialogsFetching = true;
+    },
+    [fetchAllGroupDialogs.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isGroupDialogsFetching = false;
+    },
+
+    // Получить выбранный group диалог
+    [fetchDialogById.fulfilled.type]: (state, action: PayloadAction<IGroupDialog>) => {
+      state.activeGroupDialog = action.payload;
+      state.isActiveDialogFetching = false;
+    },
+    [fetchDialogById.pending.type]: (state) => {
+      state.isActiveDialogFetching = true;
+    },
+    [fetchDialogById.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.activeDialogError = action.payload;
+      state.isActiveDialogFetching = true;
+    },
+
     // Получить список диалогов
     [fetchAllDialogs.fulfilled.type]: (state, action: PayloadAction<IDialog[]>) => {
       state.isDialogsFetching = false;
-      state.dialogsError = "";
+      state.dialogsError = '';
       state.dialogs = action.payload;
     },
-
     [fetchAllDialogs.pending.type]: (state, action) => {
       state.isDialogsFetching = true;
     },
-
     [fetchAllDialogs.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isDialogsFetching = false;
       state.dialogsError = action.payload;
@@ -99,14 +151,12 @@ const dialogsSlice = createSlice({
     // Получить выбранный диалог
     [fetchDialogById.fulfilled.type]: (state, action: PayloadAction<IDialog>) => {
       state.activeDialog = action.payload;
-      state.activeDialogError = "";
+      state.activeDialogError = '';
       state.isActiveDialogFetching = false;
     },
-
     [fetchDialogById.pending.type]: (state) => {
       state.isActiveDialogFetching = true;
     },
-
     [fetchDialogById.rejected.type]: (state, action: PayloadAction<string>) => {
       state.activeDialogError = action.payload;
       state.isActiveDialogFetching = true;
@@ -117,13 +167,23 @@ const dialogsSlice = createSlice({
       state.foundUsers = action.payload;
       state.isSearching = false;
     },
-
     [searchUsers.pending.type]: (state) => {
       state.isSearching = true;
     },
-
     [searchUsers.rejected.type]: (state, action) => {
       state.isSearching = false;
+    },
+
+    // Поиск юзеров при создании group dialog
+    [groupDialogCreationSearchUsers.fulfilled.type]: (state, action: PayloadAction<IUser[]>) => {
+      state.groupDialogCreationFoundUsers = action.payload;
+      state.groupDialogCreationIsSearching = false;
+    },
+    [groupDialogCreationSearchUsers.pending.type]: (state) => {
+      state.groupDialogCreationIsSearching = true;
+    },
+    [groupDialogCreationSearchUsers.rejected.type]: (state, action) => {
+      state.groupDialogCreationIsSearching = false;
     },
   },
 });
@@ -137,5 +197,7 @@ export const {
   setEditableMessage,
   setDialogs,
   updateMessage,
-  setMessageContextMenuIsOpen,
+  setReplyToMsg,
+  setGroupDialogCreationFoundUsers,
+  readMessage,
 } = dialogsSlice.actions;

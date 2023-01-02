@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../../hooks/useAppDispatch";
-import { useAppSelector } from "../../../../hooks/useAppSelector";
-import { registrate } from "../../../../redux/thunks/auth.thunks";
-import { TGender } from "../../../../types/entities";
-import { notifyError } from "../../../../utils/notifyError";
-import { validate } from "../../../../utils/validate";
-import { AllRoutes } from "../../../AppRoutes";
-import Stepper from "../../../Stepper";
-import StepperControls from "../../../Stepper/StepperControls";
-import { StCommonError, StError, StForm, StText } from "../styles";
-import EmailStep from "./EmailStep";
-import NameStep from "./NameStep";
-import PasswordStep from "./PasswordStep";
+import React, { useEffect, useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { registrate } from '../../../../redux/thunks/auth.thunks';
+import { TGender } from '../../../../types/entities';
+import { validate } from '../../../../utils/validate';
+import { AllRoutes } from '../../../AppRoutes';
+import Stepper from '../../../Stepper';
+import StepperControls from '../../../Stepper/StepperControls';
+import { StCommonError, StForm, StText } from '../styles';
+import EmailStep from './EmailStep';
+import NameStep from './NameStep';
+import PasswordStep from './PasswordStep';
 
 interface IForm {
   email: string;
@@ -26,9 +25,9 @@ interface IForm {
 
 const RegisterForm = () => {
   const steps = [
-    { title: "Email", number: 1 },
-    { title: "Name", number: 2 },
-    { title: "Password", number: 3 },
+    { title: 'Email', number: 1 },
+    { title: 'Name', number: 2 },
+    { title: 'Password', number: 3 },
   ];
   const [activeStep, setActiveStep] = useState<number>(1);
 
@@ -38,7 +37,7 @@ const RegisterForm = () => {
 
   const getRegisterError = () => {
     if (Array.isArray(registerError)) {
-      return registerError.join(", ");
+      return registerError.join(', ');
     }
     return registerError;
   };
@@ -52,22 +51,22 @@ const RegisterForm = () => {
   } = useForm<IForm>();
 
   const onSubmit: SubmitHandler<IForm> = (data) => {
-    dispatch(registrate({ ...data, firstName: data.name1, lastName: data.name2 }));
+    dispatch(registrate({ ...data, firstName: data.name1, lastName: data.name2, country: data.country.value }));
   };
 
   const onCountryChange = (option: { value: string; label: string }) => {
-    setValue("country", option);
+    setValue('country', option);
   };
 
   const onGenderChange = (gender: TGender) => {
-    setValue("gender", gender);
+    setValue('gender', gender);
   };
 
   useEffect(() => {
     if (!isAuth) return;
     if (isAuth) {
       reset();
-      nav(AllRoutes.main);
+      nav(AllRoutes.dialogs);
     }
   }, [isAuth]);
 
@@ -79,17 +78,17 @@ const RegisterForm = () => {
           <EmailStep
             onCountryChange={onCountryChange}
             error={errors.email}
-            register={register("email", validate(5, 40))}
+            register={register('email', validate(5, 40))}
           />
         ) : activeStep === 2 ? (
           <NameStep
             errors={errors}
-            firstNameRegister={register("name1", validate(1, 30))}
-            lastNameRegister={register("name2", validate(1, 30))}
+            firstNameRegister={register('name1', validate(1, 30))}
+            lastNameRegister={register('name2', validate(1, 30))}
             onGenderChange={onGenderChange}
           />
         ) : (
-          <PasswordStep error={errors.password} register={register("password", validate(3, 32))} />
+          <PasswordStep error={errors.password} register={register('password', validate(3, 32))} />
         )}
 
         <StText>

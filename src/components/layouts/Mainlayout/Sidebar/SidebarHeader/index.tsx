@@ -1,14 +1,16 @@
-import React, { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import { useAppDispatch } from "../../../../../hooks/useAppDispatch";
-import { useDebounce } from "../../../../../hooks/useDebounce";
-import { useModal } from "../../../../../hooks/useModal";
-import { setSearchMode } from "../../../../../redux/slices/dialogs.slice";
-import { searchUsers } from "../../../../../redux/thunks/dialogs.thunks";
-import { MenuIcon } from "../../../../../utils/icons";
-import Modal from "../../../../UI/Modal";
-import BurgerMenu from "../BurgerMenu";
-import { Transition, TransitionStatus } from "react-transition-group";
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch';
+import { useDebounce } from '../../../../../hooks/useDebounce';
+import { useModal } from '../../../../../hooks/useModal';
+import { setSearchMode } from '../../../../../redux/slices/dialogs.slice';
+import { searchUsers } from '../../../../../redux/thunks/dialogs.thunks';
+import { MenuIcon } from '../../../../../assets/icons';
+import BurgerMenu from '../BurgerMenu';
+import { IUser } from '../../../../../types/entities';
+import { NavLink } from 'react-router-dom';
+import { AllRoutes } from '../../../../AppRoutes';
+import { Tab } from '../../../../Tab';
 
 const StHeader = styled.div`
   top: 0;
@@ -18,9 +20,9 @@ const StHeader = styled.div`
   position: sticky;
   padding: 10px;
   display: flex;
-  align-items: center;
-  gap: 20px;
   background-color: ${({ theme }) => theme.currentTheme.background.secondary};
+  flex-direction: column;
+  gap: 10px;
   .burger-icon {
     cursor: pointer;
   }
@@ -40,31 +42,37 @@ const StInput = styled.input`
   }
 `;
 
+const StSearchBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+`;
+
+const StTabs = styled.div`
+  display: flex;
+`;
+
 interface IProps {
-  name: string;
+  authUser: IUser;
   searchMode: boolean;
+  activeTab: number;
+  setActiveTab: (id: number) => void;
 }
 
-const sidebarTransitionStyles = {
-  entering: { transform: `translateX(-100%)` },
-  entered: { transform: `translateX(0)` },
-  exiting: { transform: `translateX(-100%)` },
-  exited: { transform: `translateX(-100%)` },
-} as Record<TransitionStatus, { transform: string }>;
-
-const overlayTransitionStyles = {
-  entering: { opacity: 0 },
-  entered: { opacity: 1 },
-  exiting: { opacity: 0 },
-  exited: { opacity: 0 },
-} as Record<TransitionStatus, { opacity: number }>;
-
-const SidebarHeader: FC<IProps> = ({ name, searchMode }) => {
+const SidebarHeader: FC<IProps> = ({ authUser, searchMode, activeTab, setActiveTab }) => {
   const dispatch = useAppDispatch();
-  const [searchValue, setSearchValue] = useState("");
-  const searchQuery = useDebounce(searchValue, 700);
+  const [searchValue, setSearchValue] = useState('');
 
+  const searchQuery = useDebounce(searchValue, 700);
   const { isOpen, onClose, onOpen } = useModal();
+
+  const tabs = useMemo(() => {
+    return [
+      { tabContent: 'Dialogs', id: 1, to: AllRoutes.dialogs },
+      { tabContent: 'Group Dialogs', id: 2, to: AllRoutes.group_dialogs },
+    ];
+  }, []);
 
   useEffect(() => {
     if (!searchQuery) {
@@ -77,11 +85,18 @@ const SidebarHeader: FC<IProps> = ({ name, searchMode }) => {
 
   return (
     <StHeader>
-      <MenuIcon size={28} className="burger-icon" onClick={onOpen} />
-
-      <BurgerMenu onClose={onClose} name={name} isOpen={isOpen} />
-
-      <StInput type="text" placeholder="Search" onChange={(e) => setSearchValue(e.target.value)} />
+      <StSearchBlock>
+        <MenuIcon size={28} className="burger-icon" onClick={onOpen} />
+        <StInput type="text" placeholder="Search" onChange={(e) => setSearchValue(e.target.value)} />
+      </StSearchBlock>
+      <StTabs>
+        {tabs.map((t) => (
+          <Tab key={t.id} to={t.to} active={activeTab === t.id} onClick={() => setActiveTab(t.id)}>
+            <NavLink to={t.to}>{t.tabContent}</NavLink>
+          </Tab>
+        ))}
+      </StTabs>
+      <BurgerMenu onClose={onClose} authUser={authUser} isOpen={isOpen} />
     </StHeader>
   );
 };

@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../../hooks/useAppDispatch";
-import { useAppSelector } from "../../../../hooks/useAppSelector";
-import { login } from "../../../../redux/thunks/auth.thunks";
-import { validate } from "../../../../utils/validate";
-import { AllRoutes } from "../../../AppRoutes";
-import Button from "../../../UI/Button";
-import TextField from "../../../UI/TextField";
-import { StForm, StError, StText, StBtnBlock } from "../styles";
+import React, { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { login } from '../../../../redux/thunks/auth.thunks';
+import { validate } from '../../../../utils/validate';
+import { AllRoutes } from '../../../AppRoutes';
+import Button from '../../../UI/Button';
+import TextField from '../../../UI/TextField';
+import { StForm, StError, StText, StBtnBlock } from '../styles';
 
 interface IForm {
   email: string;
@@ -33,7 +33,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (isAuth) {
-      nav(AllRoutes.main);
+      nav(AllRoutes.dialogs);
       reset();
     }
   }, [isAuth]);
@@ -43,14 +43,14 @@ const LoginForm = () => {
       <TextField
         label="Email"
         error={errors.email?.message}
-        register={register("email", validate(5, 50))}
+        register={register('email', validate(5, 50))}
         placeholder="Your email"
         type="email"
       />
       <TextField
         label="Password"
         error={errors.password?.message}
-        register={register("password", validate(3, 32))}
+        register={register('password', validate(3, 32))}
         placeholder="Your password"
         type="password"
       />

@@ -1,4 +1,5 @@
 import { FC } from "react";
+import Avatar from "react-avatar";
 import styled from "styled-components";
 import { StAvatar } from "../../../../../../styles/common";
 
@@ -37,17 +38,24 @@ interface IProps {
   firstName: string;
   id: number;
   lastName: string;
+  avatar?: string;
   handleCreateDialog: (id: number) => void;
 }
 
-const FoundUserItem: FC<IProps> = ({ firstName, lastName, handleCreateDialog, id }) => {
+const FoundUserItem: FC<IProps> = ({ firstName, lastName, handleCreateDialog, id, avatar }) => {
   const onUserClick = () => {
     handleCreateDialog(id);
   };
 
   return (
     <StWrapper onClick={onUserClick}>
-      <StAvatar size="medium"></StAvatar>
+      {avatar ? (
+        <StAvatar size="medium">
+          <img src={avatar} alt={firstName} />
+        </StAvatar>
+      ) : (
+        <Avatar name={firstName} size="45px" round />
+      )}
       <StInfo>
         <StHeader>
           <StName>{`${firstName} ${lastName}`}</StName>

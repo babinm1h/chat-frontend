@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { StAvatar } from "../../../../../styles/common";
 import MenuItems from "./MenuItems";
 import { CSSTransition } from "react-transition-group";
+import { IUser } from "../../../../../types/entities";
+import Avatar from "react-avatar";
 
 const StWrapper = styled.div`
   width: 320px;
@@ -53,11 +55,11 @@ const StSetStatus = styled.p`
 
 interface IProps {
   onClose: () => void;
-  name: string;
+  authUser: IUser;
   isOpen: boolean;
 }
 
-const BurgerMenu: FC<IProps> = ({ onClose, name, isOpen }) => {
+const BurgerMenu: FC<IProps> = ({ onClose, authUser, isOpen }) => {
   return (
     <CSSTransition
       in={isOpen}
@@ -69,11 +71,17 @@ const BurgerMenu: FC<IProps> = ({ onClose, name, isOpen }) => {
       <StOverlay onClick={onClose}>
         <StWrapper onClick={(e) => e.stopPropagation()}>
           <StHeader>
-            <StAvatar size="medium"></StAvatar>
-            <StName>{name}</StName>
+            {authUser.avatar ? (
+              <StAvatar size="medium">
+                <img src={authUser.avatar} alt={authUser.firstName} />
+              </StAvatar>
+            ) : (
+              <Avatar size="45px" name={authUser.firstName} round />
+            )}
+            <StName>{authUser.firstName + " " + authUser.lastName}</StName>
             <StSetStatus>Установить статус</StSetStatus>
           </StHeader>
-          <MenuItems />
+          <MenuItems/>
         </StWrapper>
       </StOverlay>
     </CSSTransition>

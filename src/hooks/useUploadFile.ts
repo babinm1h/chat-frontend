@@ -1,24 +1,15 @@
 import { useState } from "react";
 
 export const useUploadImage = () => {
-  const [img, setImg] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    if (e.target.files && e.target.files[0]) {
-      setImg(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    reader.onload = (ev) => {
-      setPreview(ev.target?.result as string);
-    };
+    if (e.target.files?.[0]) setFile(e.target.files[0]);
   };
 
   const resetFiles = () => {
-    setImg(null);
-    setPreview(null);
+    setFile(null);
   };
 
-  return { resetFiles, handleFileChange, preview, img };
+  return { resetFiles, handleFileChange, file };
 };

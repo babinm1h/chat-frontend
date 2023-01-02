@@ -1,7 +1,7 @@
 import cn from "classnames";
 import React, { FC } from "react";
 import styled from "styled-components";
-import { CheckIcon } from "../../utils/icons";
+import { CheckIcon } from "../../assets/icons";
 
 const StStepTitle = styled.div`
   position: absolute;

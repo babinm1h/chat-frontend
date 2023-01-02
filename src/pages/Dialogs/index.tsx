@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
-import { Outlet, useParams } from "react-router-dom";
-import styled from "styled-components";
-import Mainlayout from "../../components/layouts/Mainlayout";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { useAppSelector } from "../../hooks/useAppSelector";
-import { useSocket } from "../../hooks/useSocket";
-import { addDialog, addMessage, deleteMessage, updateMessage } from "../../redux/slices/dialogs.slice";
-import { IDialog, IMessage } from "../../types/entities";
-import { SocketEvents } from "../../types/socketEvents.types";
+import { useEffect } from 'react';
+import { Outlet, useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import NotifiedMessage from '../../components/NotifiedMessage';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useSocket } from '../../hooks/useSocket';
+import { addDialog, addMessage, deleteMessage, readMessage, updateMessage } from '../../redux/slices/dialogs.slice';
+import { IDialog, IMessage } from '../../types/entities';
+import { SocketEvents } from '../../types/socketEvents.types';
+import { notifyMessage } from '../../utils/toast.helpers';
 
 const StEmpty = styled.div`
   display: flex;
@@ -19,8 +19,6 @@ const StEmpty = styled.div`
 
 const DialogsPage = () => {
   const dispatch = useAppDispatch();
-  const { dialogs } = useAppSelector((state) => state.dialogs);
-
   const { id } = useParams() as { id: string };
   const socket = useSocket();
 
@@ -28,6 +26,9 @@ const DialogsPage = () => {
     socket.connect();
     socket.on(SocketEvents.receiveMsg, (msg: IMessage) => {
       dispatch(addMessage(msg));
+      if (!id || +id !== +msg.dialogId) {
+        notifyMessage(<NotifiedMessage message={msg} />);
+      }
     });
 
     socket.on(SocketEvents.createDialog, ({ dialog }: { dialog: IDialog }) => {
@@ -42,18 +43,20 @@ const DialogsPage = () => {
       dispatch(updateMessage(msg));
     });
 
+    socket.on(SocketEvents.readMsg, (msg: IMessage) => {
+      dispatch(readMessage(msg));
+    });
+
     return () => {
       socket.off(SocketEvents.receiveMsg);
       socket.off(SocketEvents.connect);
     };
-  }, [socket]);
+  }, [socket, id]);
 
   return (
-    <Mainlayout>
-      <StEmpty>
-        <Outlet />
-      </StEmpty>
-    </Mainlayout>
+    <StEmpty>
+      <Outlet />
+    </StEmpty>
   );
 };
 

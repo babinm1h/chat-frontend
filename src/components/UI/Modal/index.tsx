@@ -1,8 +1,9 @@
 import React, { PropsWithChildren, FC } from "react";
 import styled from "styled-components";
-import { CloseIcon } from "../../../utils/icons";
+import { CloseIcon } from "../../../assets/icons";
 import { createPortal } from "react-dom";
 import { CSSTransition } from "react-transition-group";
+import Button from "../Button";
 
 const StModal = styled.div`
   background-color: ${({ theme }) => theme.currentTheme.background.secondary};
@@ -13,25 +14,20 @@ const StModal = styled.div`
   display: flex;
   flex-direction: column;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%), 0px 24px 38px 3px rgb(0 0 0 / 14%),
-    0px 9px 46px 8px rgb(0 0 0 / 12%);
+  box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%), 0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
   transition: all 0.25s ease-in-out;
   opacity: 0;
   transform: scale(0.3);
-  &.medium {
-    width: 50%;
-    height: 50%;
-  }
+  min-width: 400px;
+  min-height: 200px;
+  max-height: 85vh;
   &.fullscreen {
     width: 100%;
     height: 100%;
     border-radius: 0;
+    max-height: 100vh;
   }
-  &.small {
-    width: 30%;
-    height: 30%;
-  }
-  @media (max-width: 700px) {
+  /* @media (max-width: 700px) {
     width: 100% !important;
     height: 100% !important;
     border-radius: 0;
@@ -40,7 +36,7 @@ const StModal = styled.div`
     width: 100% !important;
     height: 100% !important;
     border-radius: 0;
-  }
+  } */
 `;
 
 const StOverlay = styled.div`
@@ -71,7 +67,7 @@ const StHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   padding: 0 20px;
   button {
     display: flex;
@@ -85,14 +81,46 @@ const StHeader = styled.div`
   }
 `;
 
+const StModalContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1 1 auto;
+  padding: 0 20px;
+  overflow: hidden;
+`;
+
+const StModalBtns = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  justify-content: flex-end;
+  padding: 20px;
+  padding-bottom: 0;
+`;
+
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  size?: "small" | "medium" | "fullscreen";
+  size?: "fullscreen";
+  onConfirm?: () => void;
+  withButtons?: boolean;
+  confirmText?: string;
 }
 
-const Modal: FC<PropsWithChildren<IProps>> = ({ children, isOpen, onClose, title, size = "medium" }) => {
+const Modal: FC<PropsWithChildren<IProps>> = ({
+  children,
+  isOpen,
+  onClose,
+  title,
+  size = "medium",
+  onConfirm,
+  withButtons,
+  confirmText,
+}) => {
   return createPortal(
     <CSSTransition
       timeout={100}
@@ -111,11 +139,21 @@ const Modal: FC<PropsWithChildren<IProps>> = ({ children, isOpen, onClose, title
               <CloseIcon size={18} />
             </button>
           </StHeader>
-          {children}
+          <StModalContent>{children}</StModalContent>
+          {withButtons && (
+            <StModalBtns>
+              <Button onClick={onClose} variant="outlined">
+                Close
+              </Button>
+              <Button onClick={onConfirm} variant="outlined">
+                {confirmText || "Confirm"}
+              </Button>
+            </StModalBtns>
+          )}
         </StModal>
       </StOverlay>
     </CSSTransition>,
-    document.body
+    document.body,
   );
 };
 

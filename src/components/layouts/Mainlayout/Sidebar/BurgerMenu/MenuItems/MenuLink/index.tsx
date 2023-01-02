@@ -1,7 +1,7 @@
-import cn from "classnames";
-import React, { FC, PropsWithChildren } from "react";
-import { NavLink, useMatch, useResolvedPath } from "react-router-dom";
-import { StMenuItem } from "../../../../../../../styles/common";
+import cn from 'classnames';
+import React, { FC, PropsWithChildren } from 'react';
+import { NavLink, useMatch, useResolvedPath } from 'react-router-dom';
+import { StMenuItem } from '../../../../../../../styles/common';
 
 interface IProps {
   to: string;
@@ -10,8 +10,6 @@ interface IProps {
 const MenuLink: FC<PropsWithChildren<IProps>> = ({ to, children }) => {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
-
-  console.log(match, resolved);
 
   return (
     <NavLink to={to}>

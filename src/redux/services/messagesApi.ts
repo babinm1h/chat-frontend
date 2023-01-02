@@ -1,47 +1,45 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import { TCreateMessageArgs, TUpdateMessageArgs } from "../../types/args";
-import { IMessage } from "../../types/entities";
-import { getTokenCookie } from "../../utils/cookie.helpers";
+import { createApi } from '@reduxjs/toolkit/dist/query/react';
+import { getAuthBaseQuery } from '.';
+import { TUpdateMessageArgs } from '../../types/args';
+import { IMessage } from '../../types/entities';
 
-const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:7777/messages",
-  credentials: "include",
-  prepareHeaders: (headers, api) => {
-    const token = getTokenCookie();
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
-    return headers;
-  },
-});
+const baseQuery = getAuthBaseQuery('messages');
 
 export const messagesApi = createApi({
-  reducerPath: "messagesApi",
+  reducerPath: 'messagesApi',
   baseQuery,
   endpoints: (builder) => ({
-    createMessage: builder.mutation<IMessage, TCreateMessageArgs>({
+    createMessage: builder.mutation<IMessage, FormData>({
       query: (payload) => ({
-        url: "/create",
-        method: "POST",
+        url: '/create',
+        method: 'POST',
         body: payload,
+      }),
+    }),
+
+    readMessage: builder.mutation<IMessage, number>({
+      query: (id) => ({
+        url: `/read/${id}`,
+        method: 'PUT',
       }),
     }),
 
     deleteMessage: builder.mutation<IMessage, number>({
       query: (messageId) => ({
         url: `/delete/${messageId}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
     }),
 
     updateMessage: builder.mutation<IMessage, TUpdateMessageArgs>({
       query: ({ id, text }) => ({
         url: `/update/${id}`,
-        method: "PUT",
+        method: 'PUT',
         body: { text },
       }),
     }),
   }),
 });
 
-export const { useCreateMessageMutation, useDeleteMessageMutation, useUpdateMessageMutation } = messagesApi;
+export const { useCreateMessageMutation, useDeleteMessageMutation, useUpdateMessageMutation, useReadMessageMutation } =
+  messagesApi;

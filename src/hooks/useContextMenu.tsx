@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, RefObject } from "react";
-import { setMessageContextMenuIsOpen } from "../redux/slices/dialogs.slice";
+import { useState, useEffect, useRef } from "react";
 import { useAppDispatch } from "./useAppDispatch";
 
 export const useContextMenu = (menuWidth: number) => {
@@ -10,22 +9,20 @@ export const useContextMenu = (menuWidth: number) => {
 
   const onContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const msg = e.currentTarget.getBoundingClientRect();
     let x = e.pageX;
     let y = e.pageY;
 
-    if (msg.width + x > window.innerWidth) {
+    if (menuWidth + x > window.innerWidth) {
       x = x - menuWidth;
     }
-    // console.log(msg.height + y, window.innerHeight);
+
     setCoords({ x, y });
     setShowMenu(true);
-    dispatch(setMessageContextMenuIsOpen(true));
+    // console.log(msg.height + y, window.innerHeight);
   };
 
   const handleClose = () => {
     setShowMenu(false);
-    dispatch(setMessageContextMenuIsOpen(false));
   };
 
   const handleCloseOnOusideClick = (e: MouseEvent) => {
@@ -41,7 +38,6 @@ export const useContextMenu = (menuWidth: number) => {
       document.removeEventListener("pointerdown", handleCloseOnOusideClick);
     };
   }, [showMenu]);
-
 
   return { onContextMenu, handleClose, coords, showMenu, menuRef };
 };

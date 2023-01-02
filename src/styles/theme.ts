@@ -2,24 +2,24 @@ const theme = {
   colors: {
     // Common
     common: {
-      orange: "#febb02",
-      primaryBlue: "#4388B9",
-      darkBlue: "#2b09ff",
-      btnBorder: "#d9d9d9",
-      gray: "#888",
-      green: "#008009",
+      orange: '#febb02',
+      primaryBlue: '#4388B9',
+      darkBlue: '#2b09ff',
+      btnBorder: '#d9d9d9',
+      gray: '#888',
+      green: '#008009',
       blueHover: `#0070cb`,
-      blueActive: "#0062b3",
+      blueActive: '#0062b3',
       semitransparentBlack: `rgba(0,0,0, 0.45)`,
     },
   },
 
   fontSize: {
-    large: "48px",
-    big: "24px",
-    md: "16px",
-    def: "14px",
-    xs: "13px",
+    large: '48px',
+    big: '24px',
+    md: '16px',
+    def: '14px',
+    xs: '13px',
   },
 
   shadow: {
@@ -32,38 +32,48 @@ export default theme;
 
 export const LightTheme = {
   text: {
-    primary: "#00000",
-    secondary: "#7d7f81",
+    primary: '#00000',
+    secondary: '#7d7f81',
+    disabled: 'rgba(#fff, 0.5)',
   },
   background: {
-    icon: "#6B7782",
-    primary: "",
-    secondary: "",
-    tertiary: "",
-    hover: "",
-    myMessage: "",
-    receivedMessage: "",
-    scrollThumb: "",
-    scrollTrack: "",
-    active: "",
+    icon: '#6B7782',
+    primary: '',
+    secondary: '',
+    tertiary: '',
+    hover: '',
+    myMessage: '',
+    receivedMessage: '',
+    scrollThumb: '',
+    scrollTrack: '',
+    active: '',
+    border: `rgba(0,0,0, 0.2)`,
   },
 };
 
 export const DarkTheme = {
   background: {
-    primary: "#0E1621",
-    secondary: "#17212B",
-    tertiary: "#242F3D",
-    hover: "#26323d",
-    myMessage: "#2B5278",
-    receivedMessage: "#1c2b3b",
-    icon: "#6B7782",
-    scrollThumb: "#4b545c",
-    scrollTrack: "#26323d",
-    active: "#2F3D4B",
+    primary: '#0E1621',
+    secondary: '#17212B',
+    tertiary: '#242F3D',
+    hover: '#222E3C',
+    myMessage: '#2B5278',
+    receivedMessage: '#182633',
+    icon: '#6B7782',
+    scrollThumb: '#4b545c',
+    scrollTrack: '#26323d',
+    active: '#2F3D4B',
+    border: `rgba(255,255,255, 0.2)`,
   },
   text: {
-    primary: "#fff",
-    secondary: "#7e7e7e",
+    primary: '#fff',
+    secondary: '#7e7e7e',
+    disabled: '#ffffff66',
   },
 };
+
+//
+export enum ThemesEnum {
+  light = 'light',
+  dark = 'dark',
+}

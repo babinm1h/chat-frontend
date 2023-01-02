@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import { useNavigate } from "react-router-dom";
-import { IDialog } from "../../../../../types/entities";
-import { AllRoutes } from "../../../../AppRoutes";
-import SidebarUser from "../SidebarUser";
+import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { IDialog } from '../../../../../types/entities';
+import { AllRoutes } from '../../../../AppRoutes';
+import SidebarUser from '../SidebarItems';
 
 interface IProps {
   dialogs: IDialog[];
@@ -14,7 +14,7 @@ const DialogsList: FC<IProps> = ({ dialogs, activeDialogId, authUserId }) => {
   const nav = useNavigate();
 
   const handleSetActiveDialog = (id: number) => {
-    nav(AllRoutes.main + `/${id}`);
+    nav(AllRoutes.dialogs + `/${id}`);
   };
 
   return (

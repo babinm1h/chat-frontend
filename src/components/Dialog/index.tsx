@@ -5,6 +5,7 @@ import { StAvatar } from "../../styles/common";
 import DialogForm from "../forms/DialogForm";
 import DotsLoader from "../UI/DotsLoader";
 import DialogMessages from "./DialogMessages";
+import Avatar from "react-avatar";
 
 const StWrapper = styled.div`
   display: flex;
@@ -43,25 +44,26 @@ const StTyping = styled.div`
 `;
 
 const Dialog = () => {
-  const {
-    activeDialog,
-    isActiveDialogFetching,
-    user,
-    typingUser,
-    editableMessage,
-    messageContextMenuIsOpen,
-  } = useDialog();
+  const { activeDialog, isActiveDialogFetching, user, typingUser, editableMessage, replyToMsg } = useDialog();
 
   if (!activeDialog || isActiveDialogFetching) {
     return <>Loading</>;
   }
 
+  const receiver = user?.id === activeDialog.receiverId ? activeDialog.creator : activeDialog.receiver;
+
   return (
     <StWrapper>
       <StHeader>
-        <StAvatar size="small"></StAvatar>
+        {receiver.avatar ? (
+          <StAvatar size="medium">
+            <img src={receiver.avatar} alt={receiver.firstName} />
+          </StAvatar>
+        ) : (
+          <Avatar name={receiver.firstName} size="32px" round />
+        )}
         <StReceiver>
-          <StMobile>{activeDialog.receiver.firstName}</StMobile>
+          <StMobile>{receiver.firstName}</StMobile>
           <StLastOnline>
             {typingUser ? (
               <StTyping>
@@ -74,12 +76,8 @@ const Dialog = () => {
           </StLastOnline>
         </StReceiver>
       </StHeader>
-      <DialogMessages
-        messages={activeDialog.messages}
-        user={user}
-        messageContextMenuIsOpen={messageContextMenuIsOpen}
-      />
-      <DialogForm user={user} editableMessage={editableMessage} />
+      <DialogMessages messages={activeDialog.messages} user={user} />
+      <DialogForm user={user} editableMessage={editableMessage} replyToMsg={replyToMsg} />
     </StWrapper>
   );
 };

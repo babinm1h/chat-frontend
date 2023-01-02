@@ -5,7 +5,6 @@ import styled from "styled-components";
 
 const StLabel = styled.label`
   transition: all 0.15s ease-in-out;
-  padding-left: 14px;
   font-size: 80%;
   color: ${({ theme }) => theme.currentTheme.background.icon};
   &.error {
@@ -17,7 +16,7 @@ const StWrapper = styled.div`
   display: inline-flex;
   flex-direction: column;
   width: 100%;
-  gap: 2px;
+  gap: 4px;
 
   input {
     width: 100%;

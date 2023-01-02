@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+import { css } from 'styled-components';
 
 export const scrollbarMixin = () => css`
   &::-webkit-scrollbar-thumb {
@@ -20,4 +20,16 @@ export const scrollbarMixin = () => css`
       background-color: transparent;
     }
   }
+`;
+
+export const lineClampMixin = (num?: number) => css`
+  display: -webkit-box;
+  -webkit-line-clamp: ${num ? num : 1};
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  word-break: break-all;
+  white-space: pre-wrap;
 `;

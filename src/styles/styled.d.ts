@@ -1,6 +1,6 @@
-import "styled-components";
+import 'styled-components';
 
-declare module "styled-components" {
+declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
       common: {
@@ -27,10 +27,12 @@ declare module "styled-components" {
         scrollThumb: string;
         scrollTrack: string;
         active: string;
+        border: string;
       };
       text: {
         primary: string;
         secondary: string;
+        disabled: string;
       };
     };
     fontSize: {
@@ -45,5 +47,3 @@ declare module "styled-components" {
     };
   }
 }
-
-export type ThemeTypes = "light" | "dark";

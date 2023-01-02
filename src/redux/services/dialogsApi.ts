@@ -1,32 +1,22 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import { IDialog } from "../../types/entities";
-import { getTokenCookie } from "../../utils/cookie.helpers";
+import { createApi } from '@reduxjs/toolkit/dist/query/react';
+import { getAuthBaseQuery } from '.';
+import { IDialog } from '../../types/entities';
 
 export interface ICreateDialogResponse {
   dialog: IDialog;
-  status: "created" | "exist";
+  status: 'created' | 'exist';
 }
 
-const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:7777/dialogs",
-  credentials: "include",
-  prepareHeaders: (headers, api) => {
-    const token = getTokenCookie();
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
-    return headers;
-  },
-});
+const baseQuery = getAuthBaseQuery('dialogs');
 
 export const dialogsApi = createApi({
-  reducerPath: "dialogsApi",
+  reducerPath: 'dialogsApi',
   baseQuery,
   endpoints: (builder) => ({
     createDialog: builder.mutation<ICreateDialogResponse, number>({
       query: (receiverId: number) => ({
-        url: "/create",
-        method: "POST",
+        url: '/create',
+        method: 'POST',
         body: { receiverId },
       }),
     }),

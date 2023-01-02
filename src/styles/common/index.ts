@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StOverlay = styled.div`
   background-color: ${({ theme }) => theme.colors.common.semitransparentBlack};
@@ -14,15 +14,30 @@ export const StOverlay = styled.div`
   justify-content: center;
 `;
 
-export const StAvatar = styled.div<{ size: "small" | "big" | "medium" }>`
-  width: ${({ size }) => (size === "big" ? `54px` : size === "medium" ? "45px" : "32px")};
-  height: ${({ size }) => (size === "big" ? `54px` : size === "medium" ? "45px" : "32px")};
+export const StAvatar = styled.div<{ size: 'small' | 'big' | 'medium' }>`
+  width: ${({ size }) => (size === 'big' ? `54px` : size === 'medium' ? '45px' : '32px')};
+  height: ${({ size }) => (size === 'big' ? `54px` : size === 'medium' ? '45px' : '32px')};
   border-radius: 50%;
-  background-color: lime;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   img {
     object-fit: cover;
     width: 100%;
+    height: 100%;
+  }
+  &::after {
+    position: absolute;
+    bottom: 1px;
+    right: 2px;
+    width: 11px;
+    height: 11px;
+    content: '';
+    background-color: lime;
+    border-radius: 50%;
+    border: 1px solid ${({ theme }) => theme.currentTheme.background.secondary};
   }
 `;
 export const StMenuItem = styled.li`
@@ -51,11 +66,11 @@ export const StMenuItem = styled.li`
 
 export const StContextMenuItem = styled.div`
   display: flex;
-  gap: 10px;
-  padding: 5px 20px;
+  gap: 15px;
+  padding: 10px 15px;
   transition: all 0.2s ease-in;
-  border-radius: 4px;
   cursor: pointer;
+  align-items: center;
   color: ${({ theme }) => theme.currentTheme.text.primary};
   a {
     color: ${({ theme }) => theme.currentTheme.text.primary};

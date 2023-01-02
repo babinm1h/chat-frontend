@@ -1,18 +1,17 @@
-import React, { useEffect } from "react";
-import { DefaultTheme, ThemeProvider } from "styled-components";
-import AppRoutes from "./components/AppRoutes";
-import { useAppDispatch } from "./hooks/useAppDispatch";
-import { useAppSelector } from "./hooks/useAppSelector";
-import { checkAuth } from "./redux/thunks/auth.thunks";
-import { ThemeTypes } from "./styles/styled";
-import { ToastContainer } from "react-toastify";
-import theme, { DarkTheme, LightTheme } from "./styles/theme";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from 'react';
+import { DefaultTheme, ThemeProvider } from 'styled-components';
+import AppRoutes from './components/AppRoutes';
+import { useAppDispatch } from './hooks/useAppDispatch';
+import { useAppSelector } from './hooks/useAppSelector';
+import { checkAuth } from './redux/thunks/auth.thunks';
+import { ToastContainer } from 'react-toastify';
+import theme, { DarkTheme, LightTheme, ThemesEnum } from './styles/theme';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const dispatch = useAppDispatch();
   const isCheckingAuth = useAppSelector((state) => state.auth.isCheckingAuth);
-  const currentTheme: ThemeTypes = (localStorage.getItem("chatTheme") as "light" | "dark") || "dark";
+  const [currTheme, setCurrTheme] = useState<ThemesEnum>(getTheme());
 
   useEffect(() => {
     dispatch(checkAuth());
@@ -22,8 +21,25 @@ const App = () => {
     colors: theme.colors,
     fontSize: theme.fontSize,
     shadow: theme.shadow,
-    currentTheme: currentTheme === "dark" ? DarkTheme : LightTheme,
+    currentTheme: currTheme === ThemesEnum.dark ? DarkTheme : LightTheme,
   };
+
+  function getTheme() {
+    const theme = localStorage?.getItem('chatTheme');
+    if (theme && (Object.values(ThemesEnum) as string[]).includes(theme)) {
+      return theme as ThemesEnum;
+    }
+
+    const userMedia = window.matchMedia('(prefers-color-scheme: light)');
+    if (userMedia.matches) return ThemesEnum.dark;
+
+    return ThemesEnum.dark;
+  }
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = currTheme;
+    localStorage.setItem('chatTheme', currTheme);
+  }, [currTheme]);
 
   if (isCheckingAuth) {
     return <>Loading</>;

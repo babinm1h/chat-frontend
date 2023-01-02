@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styled from "styled-components";
-import { FileIcon } from "../../../utils/icons";
+import { FileIcon } from "../../../assets/icons";
 
 const StWrapper = styled.div`
   position: absolute;
