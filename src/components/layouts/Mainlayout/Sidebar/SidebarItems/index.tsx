@@ -6,6 +6,7 @@ import cn from 'classnames';
 import { StAvatar } from '../../../../../styles/common';
 import Avatar from 'react-avatar';
 import { lineClampMixin } from '../../../../../styles/common/mixins';
+import UserAvatar from '../../../../UserAvatar';
 
 const StUnreaded = styled.span`
   display: inline-flex;
@@ -101,15 +102,7 @@ const SidebarUser: FC<IProps> = ({ dialog, activeDialogId, handleSetActiveDialog
         active: activeDialogId && +activeDialogId === dialog.id,
       })}
     >
-      {receiver.avatar ? (
-        <StAvatar size="medium">
-          <img src={receiver.avatar} alt={receiver.firstName} />
-        </StAvatar>
-      ) : (
-        <StAvatar size="medium">
-          <Avatar name={receiver.firstName} size="45px" round />
-        </StAvatar>
-      )}
+      <UserAvatar user={receiver} size="medium" fakeSize="45px" />
       <StInfo>
         <StHeader>
           <StName>{`${receiver.firstName} ${receiver.lastName}`}</StName>

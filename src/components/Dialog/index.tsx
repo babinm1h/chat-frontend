@@ -1,11 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import { useDialog } from "../../hooks/componentsHooks/useDialog";
-import { StAvatar } from "../../styles/common";
-import DialogForm from "../forms/DialogForm";
-import DotsLoader from "../UI/DotsLoader";
-import DialogMessages from "./DialogMessages";
-import Avatar from "react-avatar";
+import React from 'react';
+import styled from 'styled-components';
+import { useDialog } from '../../hooks/componentsHooks/useDialog';
+import DialogForm from '../forms/DialogForm';
+import DotsLoader from '../UI/DotsLoader';
+import DialogMessages from './DialogMessages';
+import UserAvatar from '../UserAvatar';
 
 const StWrapper = styled.div`
   display: flex;
@@ -44,7 +43,8 @@ const StTyping = styled.div`
 `;
 
 const Dialog = () => {
-  const { activeDialog, isActiveDialogFetching, user, typingUser, editableMessage, replyToMsg } = useDialog();
+  const { activeDialog, isActiveDialogFetching, user, typingUser, editableMessage, replyToMsg, bottomRef } =
+    useDialog();
 
   if (!activeDialog || isActiveDialogFetching) {
     return <>Loading</>;
@@ -55,13 +55,7 @@ const Dialog = () => {
   return (
     <StWrapper>
       <StHeader>
-        {receiver.avatar ? (
-          <StAvatar size="medium">
-            <img src={receiver.avatar} alt={receiver.firstName} />
-          </StAvatar>
-        ) : (
-          <Avatar name={receiver.firstName} size="32px" round />
-        )}
+        <UserAvatar size="small" fakeSize="32px" user={receiver} />
         <StReceiver>
           <StMobile>{receiver.firstName}</StMobile>
           <StLastOnline>
@@ -76,8 +70,8 @@ const Dialog = () => {
           </StLastOnline>
         </StReceiver>
       </StHeader>
-      <DialogMessages messages={activeDialog.messages} user={user} />
-      <DialogForm user={user} editableMessage={editableMessage} replyToMsg={replyToMsg} />
+      <DialogMessages messages={activeDialog.messages} user={user} bottomRef={bottomRef} />
+      <DialogForm user={user} editableMessage={editableMessage} replyToMsg={replyToMsg} bottomRef={bottomRef} />
     </StWrapper>
   );
 };

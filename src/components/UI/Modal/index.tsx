@@ -1,9 +1,9 @@
-import React, { PropsWithChildren, FC } from "react";
-import styled from "styled-components";
-import { CloseIcon } from "../../../assets/icons";
-import { createPortal } from "react-dom";
-import { CSSTransition } from "react-transition-group";
-import Button from "../Button";
+import React, { PropsWithChildren, FC } from 'react';
+import styled from 'styled-components';
+import { CloseIcon } from '../../../assets/icons';
+import { createPortal } from 'react-dom';
+import { CSSTransition } from 'react-transition-group';
+import Button from '../Button';
 
 const StModal = styled.div`
   background-color: ${({ theme }) => theme.currentTheme.background.secondary};
@@ -31,12 +31,12 @@ const StModal = styled.div`
     width: 100% !important;
     height: 100% !important;
     border-radius: 0;
-  }
+  } */
   @media (max-height: 500px) {
     width: 100% !important;
     height: 100% !important;
     border-radius: 0;
-  } */
+  }
 `;
 
 const StOverlay = styled.div`
@@ -88,7 +88,6 @@ const StModalContent = styled.div`
   height: 100%;
   flex: 1 1 auto;
   padding: 0 20px;
-  overflow: hidden;
 `;
 
 const StModalBtns = styled.div`
@@ -105,7 +104,7 @@ interface IProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  size?: "fullscreen";
+  size?: 'fullscreen';
   onConfirm?: () => void;
   withButtons?: boolean;
   confirmText?: string;
@@ -116,7 +115,7 @@ const Modal: FC<PropsWithChildren<IProps>> = ({
   isOpen,
   onClose,
   title,
-  size = "medium",
+  size = 'medium',
   onConfirm,
   withButtons,
   confirmText,
@@ -146,7 +145,7 @@ const Modal: FC<PropsWithChildren<IProps>> = ({
                 Close
               </Button>
               <Button onClick={onConfirm} variant="outlined">
-                {confirmText || "Confirm"}
+                {confirmText || 'Confirm'}
               </Button>
             </StModalBtns>
           )}

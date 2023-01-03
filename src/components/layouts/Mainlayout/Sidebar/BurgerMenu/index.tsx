@@ -1,10 +1,13 @@
-import { FC } from "react";
-import styled from "styled-components";
-import { StAvatar } from "../../../../../styles/common";
-import MenuItems from "./MenuItems";
-import { CSSTransition } from "react-transition-group";
-import { IUser } from "../../../../../types/entities";
-import Avatar from "react-avatar";
+import { FC, useState } from 'react';
+import styled from 'styled-components';
+import MenuItems from './MenuItems';
+import { CSSTransition } from 'react-transition-group';
+import { IUser } from '../../../../../types/entities';
+import TextField from '../../../../UI/TextField';
+import { useUpdateUserMutation } from '../../../../../redux/services/usersApi';
+import { notifyError } from '../../../../../utils/toast.helpers';
+import { lineClampMixin } from '../../../../../styles/common/mixins';
+import UserAvatar from '../../../../UserAvatar';
 
 const StWrapper = styled.div`
   width: 320px;
@@ -38,19 +41,36 @@ const StOverlay = styled.div`
 
 const StHeader = styled.div`
   padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px solid ${({ theme }) => theme.currentTheme.background.primary};
 `;
 
 const StName = styled.div`
   margin: 10px 0 2px 0;
+  ${lineClampMixin()}
 `;
 
-const StSetStatus = styled.p`
+const StSetStatus = styled.button`
   color: #56adeb;
   font-size: 14px;
   cursor: pointer;
+  align-self: flex-start;
   &:hover {
     text-decoration: underline;
   }
+`;
+
+const StStatus = styled.p`
+  font-size: 0.85rem;
+  ${lineClampMixin()}
+`;
+
+const StStatusBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 `;
 
 interface IProps {
@@ -60,28 +80,50 @@ interface IProps {
 }
 
 const BurgerMenu: FC<IProps> = ({ onClose, authUser, isOpen }) => {
+  const [edit, setEdit] = useState(false);
+  const [status, setStatus] = useState(authUser.status || '');
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
+
+  const toggleEdit = async () => {
+    try {
+      if (edit) {
+        setEdit(false);
+        if (status !== authUser.status) await updateUser({ status });
+      } else {
+        setEdit(true);
+      }
+    } catch (err: any) {
+      notifyError(err.data.message);
+    }
+  };
+
   return (
     <CSSTransition
       in={isOpen}
       timeout={100}
       mountOnEnter
       unmountOnExit
-      classNames={{ enterDone: "sidebar-enter-done" }}
+      classNames={{ enterDone: 'sidebar-enter-done' }}
     >
       <StOverlay onClick={onClose}>
         <StWrapper onClick={(e) => e.stopPropagation()}>
           <StHeader>
-            {authUser.avatar ? (
-              <StAvatar size="medium">
-                <img src={authUser.avatar} alt={authUser.firstName} />
-              </StAvatar>
-            ) : (
-              <Avatar size="45px" name={authUser.firstName} round />
-            )}
-            <StName>{authUser.firstName + " " + authUser.lastName}</StName>
-            <StSetStatus>Установить статус</StSetStatus>
+            <div>
+              <UserAvatar user={authUser} size="medium" fakeSize="45px" />
+              <StName>{authUser.firstName}</StName>
+            </div>
+            <StStatusBlock>
+              {edit ? (
+                <TextField value={status} onChange={(e) => setStatus(e.target.value)} placeholder="Status" />
+              ) : (
+                <StStatus>{status}</StStatus>
+              )}
+              <StSetStatus onClick={toggleEdit} disabled={isLoading}>
+                Set Status
+              </StSetStatus>
+            </StStatusBlock>
           </StHeader>
-          <MenuItems/>
+          <MenuItems />
         </StWrapper>
       </StOverlay>
     </CSSTransition>

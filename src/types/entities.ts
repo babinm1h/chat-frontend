@@ -13,6 +13,7 @@ export interface IUser extends IBaseEntity {
   avatar?: string;
   country: string;
   gender: TGender;
+  status?: string;
 }
 
 export interface IDialog extends IBaseEntity {

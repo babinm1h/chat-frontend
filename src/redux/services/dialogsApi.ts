@@ -1,5 +1,4 @@
-import { createApi } from '@reduxjs/toolkit/dist/query/react';
-import { getAuthBaseQuery } from '.';
+import apiSlice from '.';
 import { IDialog } from '../../types/entities';
 
 export interface ICreateDialogResponse {
@@ -7,15 +6,11 @@ export interface ICreateDialogResponse {
   status: 'created' | 'exist';
 }
 
-const baseQuery = getAuthBaseQuery('dialogs');
-
-export const dialogsApi = createApi({
-  reducerPath: 'dialogsApi',
-  baseQuery,
+export const dialogsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createDialog: builder.mutation<ICreateDialogResponse, number>({
       query: (receiverId: number) => ({
-        url: '/create',
+        url: 'dialogs/create',
         method: 'POST',
         body: { receiverId },
       }),

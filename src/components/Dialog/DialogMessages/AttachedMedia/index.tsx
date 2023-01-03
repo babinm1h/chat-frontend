@@ -50,7 +50,7 @@ const AttachedMedia: FC<IProps> = ({ images, videos }) => {
       {(images.length > 0 || videos.length > 0) && (
         <StImages>
           {images.map((img) => (
-            <StImage key={img.id}>
+            <StImage key={img.id} onContextMenu={(e) => e.stopPropagation()}>
               <img src={img.path} alt={'attached'} />
             </StImage>
           ))}

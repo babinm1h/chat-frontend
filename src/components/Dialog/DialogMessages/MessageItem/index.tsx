@@ -1,17 +1,17 @@
-import { FC, RefObject, useEffect } from 'react';
+import { FC, RefObject, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { FileTypes, IAttachment, IMessage, IUser } from '../../../../types/entities';
 import cn from 'classnames';
 import { StAvatar } from '../../../../styles/common';
-import { getMessageTime } from '../../../../utils/date.helpers';
+import { formatDate, getMessageTime } from '../../../../utils/date.helpers';
 import { useContextMenu } from '../../../../hooks/useContextMenu';
 import MessageContextMenu from '../MessageContextMenu';
 import { lineClampMixin } from '../../../../styles/common/mixins';
-import Avatar from 'react-avatar';
 import AttachedMedia from '../AttachedMedia';
 import AudioPlayer from '../../../AudioPlayer';
 import { useInView } from 'react-intersection-observer';
-import { NotReadedIcon, ReadedIcon } from '../../../../assets/icons';
+import { FileIcon, NotReadedIcon, ReadedIcon } from '../../../../assets/icons';
+import UserAvatar from '../../../UserAvatar';
 
 const StMessage = styled.div<{ repeated: boolean }>`
   padding: 10px 10px 2px 10px;
@@ -62,6 +62,23 @@ const StText = styled.p`
   word-wrap: break-word;
   color: ${({ theme }) => theme.currentTheme.text.primary};
   position: relative;
+`;
+
+const StBlockDate = styled.div`
+  color: ${({ theme }) => theme.currentTheme.text.primary};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  width: 100%;
+  top: 0;
+  z-index: 2;
+  p {
+    border-radius: 8px;
+    font-size: 14px;
+    padding: 4px 15px;
+    background-color: ${({ theme }) => theme.currentTheme.background.hover};
+  }
 `;
 
 const StWrapper = styled.div<{ isMy: boolean }>`
@@ -117,6 +134,26 @@ const StReplyMsg = styled.p`
   ${lineClampMixin()}
 `;
 
+const StFileLink = styled.a`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+  color: ${({ theme }) => theme.currentTheme.text.primary};
+  svg {
+    color: ${({ theme }) => theme.currentTheme.text.primary};
+  }
+  .circle {
+    background-color: ${({ theme }) => theme.colors.common.primaryBlue};
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+`;
+
 interface IProps {
   message: IMessage;
   user: IUser | null;
@@ -125,6 +162,7 @@ interface IProps {
   activeAudio: IAttachment | null;
   onSetActiveAudio: (a: IAttachment | null) => void;
   onReadMessage: (msgId: number, dialogId: number) => void;
+  shouldShowDate: boolean;
 }
 
 const MessageItem: FC<IProps> = ({
@@ -135,6 +173,7 @@ const MessageItem: FC<IProps> = ({
   activeAudio,
   onSetActiveAudio,
   onReadMessage,
+  shouldShowDate,
 }) => {
   const { coords, onContextMenu, showMenu, menuRef, handleClose } = useContextMenu(200);
   const isMyMsg = user?.id === message.creatorId;
@@ -150,9 +189,25 @@ const MessageItem: FC<IProps> = ({
     }
   }, [message.readed, inView]);
 
-  const attachedImages = message.attachments?.filter((att) => att.type === FileTypes.image);
-  const attachedAudios = message.attachments?.filter((att) => att.type === FileTypes.audio);
-  const attachedVideos = message.attachments?.filter((att) => att.type === FileTypes.video);
+  const attachedImages = useMemo(
+    () => message.attachments?.filter((att) => att.type === FileTypes.image),
+    [message.attachments],
+  );
+
+  const attachedAudios = useMemo(
+    () => message.attachments?.filter((att) => att.type === FileTypes.audio),
+    [message.attachments],
+  );
+
+  const attachedVideos = useMemo(
+    () => message.attachments?.filter((att) => att.type === FileTypes.video),
+    [message.attachments],
+  );
+
+  const attachedFiles = useMemo(
+    () => message.attachments?.filter((att) => att.type === FileTypes.file),
+    [message.attachments],
+  );
 
   const messageDateRender = (
     <StDate isMy={isMyMsg}>
@@ -161,88 +216,73 @@ const MessageItem: FC<IProps> = ({
     </StDate>
   );
 
-  const formatedMessage = () => {
-    if (repeated) {
-      return (
-        <>
+  const attachmentsRender = (
+    <>
+      {attachedFiles.length > 0 &&
+        attachedFiles.map((f) => (
+          <StFileLink href={f.path} download key={f.id}>
+            <div className="circle">
+              <FileIcon size={20} />
+            </div>
+            <span>Download</span>
+          </StFileLink>
+        ))}
+      {attachedAudios.length > 0 &&
+        attachedAudios.map((a) => (
+          <AudioPlayer key={a.id} audio={a} activeAudio={activeAudio} onSetActiveAudio={onSetActiveAudio} />
+        ))}
+      <AttachedMedia images={attachedImages} videos={attachedVideos} />
+    </>
+  );
+
+  return (
+    <>
+      {shouldShowDate && (
+        <StBlockDate>
+          <p>{formatDate('DD MMMM', message.createdAt)}</p>
+        </StBlockDate>
+      )}
+
+      <StWrapper isMy={isMyMsg} onContextMenu={onContextMenu}>
+        {repeated ? (
           <StAvatarWrapper repeated={repeated} onContextMenu={(e) => e.stopPropagation()}>
             <StAvatar size="small"></StAvatar>
           </StAvatarWrapper>
-          <StMessage
-            ref={ref}
-            repeated={repeated}
-            key={message.id}
-            className={cn('', {
-              myMessage: isMyMsg,
-            })}
-          >
-            {message.replyToMsg && (
-              <StReply>
-                <StReplyMsg>{message.replyToMsg.text}</StReplyMsg>
-              </StReply>
-            )}
-            <StText>{message.text}</StText>
-            {attachedAudios.length > 0 &&
-              attachedAudios.map((a) => (
-                <AudioPlayer key={a.id} audio={a} activeAudio={activeAudio} onSetActiveAudio={onSetActiveAudio} />
-              ))}
-            <AttachedMedia images={attachedImages} videos={attachedVideos} />
-            {messageDateRender}
-          </StMessage>
-        </>
-      );
-    } else {
-      return (
-        <>
+        ) : (
           <StAvatarWrapper onContextMenu={(e) => e.stopPropagation()}>
-            {message.creator.avatar ? (
-              <StAvatar size="medium">
-                <img src={message.creator.avatar} alt={message.creator.firstName} />
-              </StAvatar>
-            ) : (
-              <Avatar name={message.creator.firstName} size="32px" round />
-            )}
+            <UserAvatar user={message.creator} fakeSize={'32px'} size="small" />
           </StAvatarWrapper>
-          <StMessage
-            ref={ref}
-            repeated={repeated}
-            key={message.id}
-            className={cn('', {
-              myMessage: isMyMsg,
-            })}
-          >
-            {message.replyToMsg && (
-              <StReply>
-                <StReplyMsg>{message.replyToMsg.text}</StReplyMsg>
-              </StReply>
-            )}
-            <StText>{message.text}</StText>
-            {attachedAudios.length > 0 &&
-              attachedAudios.map((a) => (
-                <AudioPlayer key={a.id} audio={a} activeAudio={activeAudio} onSetActiveAudio={onSetActiveAudio} />
-              ))}
-            <AttachedMedia images={attachedImages} videos={attachedVideos} />
-            {messageDateRender}
-          </StMessage>
-        </>
-      );
-    }
-  };
+        )}
+        <StMessage
+          ref={ref}
+          repeated={repeated}
+          key={message.id}
+          className={cn('', {
+            myMessage: isMyMsg,
+          })}
+        >
+          {message.replyToMsg && (
+            <StReply>
+              <StReplyMsg>{message.replyToMsg.text}</StReplyMsg>
+            </StReply>
+          )}
+          <StText>{message.text}</StText>
+          {attachmentsRender}
+          {messageDateRender}
+        </StMessage>
 
-  return (
-    <StWrapper isMy={isMyMsg} onContextMenu={onContextMenu}>
-      {formatedMessage()}
-      <MessageContextMenu
-        handleClose={handleClose}
-        message={message}
-        left={coords.x as number}
-        top={coords.y as number}
-        showMenu={showMenu}
-        menuRef={menuRef}
-        isMy={isMyMsg}
-        scrollAreaRef={scrollAreaRef}
-      />
-    </StWrapper>
+        <MessageContextMenu
+          handleClose={handleClose}
+          message={message}
+          left={coords.x as number}
+          top={coords.y as number}
+          showMenu={showMenu}
+          menuRef={menuRef}
+          isMy={isMyMsg}
+          scrollAreaRef={scrollAreaRef}
+        />
+      </StWrapper>
+    </>
   );
 };
 

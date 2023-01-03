@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchDialogById } from '../../redux/thunks/dialogs.thunks';
 import { SocketEvents } from '../../types/socketEvents.types';
@@ -15,6 +15,7 @@ export const useDialog = () => {
   const { user } = useAppSelector((state) => state.auth);
   const socket = useSocket();
   const { id } = useParams();
+  const bottomRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (id) {
@@ -41,7 +42,7 @@ export const useDialog = () => {
     return () => {
       socket.emit(SocketEvents.leaveRoom, { dialogId: id });
     };
-  }, [id]);
+  }, [id, socket]);
 
   return {
     activeDialog,
@@ -51,5 +52,6 @@ export const useDialog = () => {
     typingUser,
     editableMessage,
     replyToMsg,
+    bottomRef,
   };
 };

@@ -57,7 +57,7 @@ const StControl = styled.button`
 
 const SmallCalendar = () => {
   const [currentMonth, setCurrentMonth] = useState<number>(dayjs().month());
-  const [selected, setSelected] = useState(formatDate(new Date()));
+  const [selected, setSelected] = useState(formatDate('DD.MM.YYYY', new Date()));
 
   const handleSelect = (formattedDate: string) => {
     setSelected(formattedDate);

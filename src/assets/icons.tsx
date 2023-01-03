@@ -1,5 +1,5 @@
 import { FiMenu } from 'react-icons/fi';
-import { AiOutlineClose, AiOutlineCheck, AiFillCamera } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineCheck, AiFillCamera, AiOutlineSmile } from 'react-icons/ai';
 import { RiSendPlaneFill, RiPauseCircleFill, RiPlayCircleFill } from 'react-icons/ri';
 import { BsFillFileEarmarkArrowDownFill, BsFillReplyFill } from 'react-icons/bs';
 import { MdDelete, MdModeEdit } from 'react-icons/md';
@@ -7,6 +7,8 @@ import { ImAttachment } from 'react-icons/im';
 import { IoSearchSharp } from 'react-icons/io5';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { BiCheckDouble, BiCheck } from 'react-icons/bi';
+import { HiOutlineMicrophone } from 'react-icons/hi';
+
 export {
   FiMenu as MenuIcon,
   AiOutlineClose as CloseIcon,
@@ -25,4 +27,6 @@ export {
   FaChevronRight as NextIcon,
   BiCheck as NotReadedIcon,
   BiCheckDouble as ReadedIcon,
+  AiOutlineSmile as EmojiIcon,
+  HiOutlineMicrophone as MicroIcon,
 };

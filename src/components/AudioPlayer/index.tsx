@@ -13,7 +13,9 @@ const StPlayer = styled.div`
 `;
 
 const StPlayBtn = styled.button`
-  color: ${({ theme }) => theme.currentTheme.text.primary};
+  svg {
+    color: ${({ theme }) => theme.currentTheme.text.primary};
+  }
 `;
 
 const StDuration = styled.span`

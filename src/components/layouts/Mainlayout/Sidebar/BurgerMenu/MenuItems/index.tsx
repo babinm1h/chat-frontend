@@ -7,6 +7,7 @@ import { logout } from '../../../../../../redux/slices/auth.slice';
 import { StMenuItem } from '../../../../../../styles/common';
 import { AllRoutes } from '../../../../../AppRoutes';
 import CreateGroupForm from '../../../../../forms/CreateGroupForm';
+import EditProfileForm from '../../../../../forms/EditProfileForm';
 import Modal from '../../../../../UI/Modal';
 import MenuItemWithSubmenu from './MenuItemWithSubmenu';
 import MenuLink from './MenuLink';
@@ -24,6 +25,7 @@ const MenuItems: FC<IProps> = () => {
 
   const { isOpen, onClose, onOpen } = useModal();
   const { isOpen: isCreateGroupOpen, onClose: onCreateGroupClose, onOpen: onCreateGroupOpen } = useModal();
+  const editProfileModal = useModal();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -36,7 +38,7 @@ const MenuItems: FC<IProps> = () => {
         <MenuLink to={AllRoutes.home}>Main Page</MenuLink>
         <StMenuItem onClick={onCreateGroupOpen}>Create Group</StMenuItem>
         <MenuItemWithSubmenu label="Settings">
-          <StMenuItem>Setting 1</StMenuItem>
+          <StMenuItem onClick={editProfileModal.onOpen}>Edit Profile</StMenuItem>
           <StMenuItem>Setting 2</StMenuItem>
           <StMenuItem>Setting 3</StMenuItem>
         </MenuItemWithSubmenu>
@@ -56,6 +58,10 @@ const MenuItems: FC<IProps> = () => {
 
       <Modal isOpen={isCreateGroupOpen} onClose={onCreateGroupClose} title="Create Group">
         <CreateGroupForm onClose={onCreateGroupClose} />
+      </Modal>
+
+      <Modal isOpen={editProfileModal.isOpen} onClose={editProfileModal.onClose} title="Edit Profile">
+        <EditProfileForm onClose={editProfileModal.onClose} />
       </Modal>
     </>
   );

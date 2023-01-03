@@ -1,26 +1,19 @@
-import { createApi } from '@reduxjs/toolkit/dist/query/react';
-import { getAuthBaseQuery } from '.';
+import apiSlice from '.';
 import { TCreateGroupDialogArgs } from '../../types/args';
 import { IGroupDialog } from '../../types/entities';
 
-const baseQuery = getAuthBaseQuery('group-dialogs');
-
-export const groupDialogsApi = createApi({
-  tagTypes: ['fetchGroupDialogs'],
-  reducerPath: 'groupDialogsApi',
-  baseQuery,
+export const groupDialogsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createGroupDialog: builder.mutation<IGroupDialog, TCreateGroupDialogArgs>({
       query: (payload) => ({
-        url: '/create',
+        url: 'group-dialogs/create',
         method: 'POST',
         body: payload,
       }),
     }),
 
     fetchGroupDialogs: builder.query<IGroupDialog[], void>({
-      providesTags: ['fetchGroupDialogs'],
-      query: () => ({ url: '/', method: 'GET' }),
+      query: () => ({ url: 'group-dialogs/', method: 'GET' }),
     }),
   }),
 });

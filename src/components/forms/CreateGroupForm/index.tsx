@@ -1,23 +1,23 @@
-import cn from "classnames";
-import React, { FC, useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import styled from "styled-components";
-import { CameraIcon } from "../../../assets/icons";
-import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { useAppSelector } from "../../../hooks/useAppSelector";
-import { useDebounce } from "../../../hooks/useDebounce";
-import { useUploadImage } from "../../../hooks/useUploadFile";
-import { useCreateGroupDialogMutation } from "../../../redux/services/groupDialogsApi";
-import { setGroupDialogCreationFoundUsers } from "../../../redux/slices/dialogs.slice";
-import { groupDialogCreationSearchUsers } from "../../../redux/thunks/dialogs.thunks";
-import { scrollbarMixin } from "../../../styles/common/mixins";
-import { IUser } from "../../../types/entities";
-import { notifyError } from "../../../utils/toast.helpers";
-import { validate } from "../../../utils/validate";
-import SelectableUser from "../../SelectableUser";
-import Button from "../../UI/Button";
-import TextField from "../../UI/TextField";
-import UserChip from "../../UserChip";
+import cn from 'classnames';
+import React, { FC, useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import styled from 'styled-components';
+import { CameraIcon } from '../../../assets/icons';
+import { useAppDispatch } from '../../../hooks/useAppDispatch';
+import { useAppSelector } from '../../../hooks/useAppSelector';
+import { useDebounce } from '../../../hooks/useDebounce';
+import { useUploadImage } from '../../../hooks/useUploadFile';
+import { useCreateGroupDialogMutation } from '../../../redux/services/groupDialogsApi';
+import { setGroupDialogCreationFoundUsers } from '../../../redux/slices/dialogs.slice';
+import { groupDialogCreationSearchUsers } from '../../../redux/thunks/dialogs.thunks';
+import { scrollbarMixin } from '../../../styles/common/mixins';
+import { IUser } from '../../../types/entities';
+import { notifyError } from '../../../utils/toast.helpers';
+import { validate } from '../../../utils/validate';
+import SelectableUser from '../../SelectableUser';
+import Button from '../../UI/Button';
+import TextField from '../../UI/TextField';
+import UserChip from '../../UserChip';
 
 const StForm = styled.form`
   display: flex;
@@ -62,6 +62,9 @@ const StGroupImg = styled.label`
   }
   &.withoutBg {
     background-color: transparent;
+  }
+  svg {
+    color: #fff;
   }
 `;
 
@@ -110,7 +113,7 @@ const CreateGroupForm: FC<IProps> = ({ onClose }) => {
   const { groupDialogCreationFoundUsers, groupDialogCreationIsSearching } = useAppSelector((state) => state.dialogs);
   const { user } = useAppSelector((state) => state.auth);
 
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>('');
   const [step, setStep] = useState<number>(1);
   const [selectedUsers, setSelectedUsers] = useState<IUser[]>([]);
 
@@ -154,8 +157,8 @@ const CreateGroupForm: FC<IProps> = ({ onClose }) => {
   const handleContinue = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (step === 1) {
       e.preventDefault();
-      if (!getValues("title")) {
-        return notifyError("Group name is required");
+      if (!getValues('title')) {
+        return notifyError('Group name is required');
       }
       setStep(step + 1);
     }
@@ -189,7 +192,7 @@ const CreateGroupForm: FC<IProps> = ({ onClose }) => {
               <input type="file" id="groupImg" accept="image/png, image/jpg, image/jpeg" onChange={handleFileChange} />
               {file ? <img src={URL.createObjectURL(file)} alt="preview" /> : <CameraIcon size={30} />}
             </StGroupImg>
-            <TextField label="Group name" register={register("title", validate(1, 10))} error={errors.title?.message} />
+            <TextField label="Group name" register={register('title', validate(1, 10))} error={errors.title?.message} />
           </StGroupInfo>
         ) : (
           <>
@@ -205,7 +208,7 @@ const CreateGroupForm: FC<IProps> = ({ onClose }) => {
             </StSearchBlock>
             <StUsersList>
               {groupDialogCreationIsSearching
-                ? "Loading"
+                ? 'Loading'
                 : groupDialogCreationFoundUsers.length > 0 &&
                   searchValue &&
                   groupDialogCreationFoundUsers
@@ -226,7 +229,7 @@ const CreateGroupForm: FC<IProps> = ({ onClose }) => {
             Cancel
           </Button>
           <Button variant="outlined" onClick={handleContinue} disabled={isLoading}>
-            {step === 2 ? "Create Group" : "Continue"}
+            {step === 2 ? 'Create Group' : 'Continue'}
           </Button>
         </StBtns>
       </StForm>

@@ -1,6 +1,6 @@
-import React, { FC } from "react";
-import styled from "styled-components";
-import { FileIcon, TrashIcon } from "../../../../assets/icons";
+import React, { FC } from 'react';
+import styled from 'styled-components';
+import { FileIcon, TrashIcon } from '../../../../assets/icons';
 
 const StWrapper = styled.div`
   display: flex;
@@ -31,10 +31,12 @@ const StDelete = styled.span`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: ${({ theme }) => theme.currentTheme.background.icon};
-  transition: all 0.15s ease-in-out;
-  &:hover {
-    color: ${({ theme }) => theme.currentTheme.text.primary};
+  svg {
+    color: ${({ theme }) => theme.currentTheme.background.icon};
+    transition: all 0.15s ease-in-out;
+    &:hover {
+      color: ${({ theme }) => theme.currentTheme.text.primary};
+    }
   }
 `;
 
@@ -51,6 +53,7 @@ const StCircle = styled.div`
     width: 50%;
     height: 50%;
     object-fit: cover;
+    color: ${({ theme }) => theme.currentTheme.text.primary};
   }
 `;
 

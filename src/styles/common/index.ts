@@ -14,9 +14,9 @@ export const StOverlay = styled.div`
   justify-content: center;
 `;
 
-export const StAvatar = styled.div<{ size: 'small' | 'big' | 'medium' }>`
-  width: ${({ size }) => (size === 'big' ? `54px` : size === 'medium' ? '45px' : '32px')};
-  height: ${({ size }) => (size === 'big' ? `54px` : size === 'medium' ? '45px' : '32px')};
+export const StAvatar = styled.div<{ size?: 'big' | 'small' | 'medium' | 'large'; online?: boolean }>`
+  width: ${({ size }) => (size === 'big' ? `54px` : size === 'medium' ? '45px' : size === 'large' ? '82px' : '32px')};
+  height: ${({ size }) => (size === 'big' ? `54px` : size === 'medium' ? '45px' : size === 'large' ? '82px' : '32px')};
   border-radius: 50%;
   flex-shrink: 0;
   display: inline-flex;
@@ -27,8 +27,10 @@ export const StAvatar = styled.div<{ size: 'small' | 'big' | 'medium' }>`
     object-fit: cover;
     width: 100%;
     height: 100%;
+    border-radius: 50%;
   }
   &::after {
+    display: ${({ online }) => (online ? 'inline-block' : 'none')};
     position: absolute;
     bottom: 1px;
     right: 2px;

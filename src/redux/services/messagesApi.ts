@@ -1,17 +1,12 @@
-import { createApi } from '@reduxjs/toolkit/dist/query/react';
-import { getAuthBaseQuery } from '.';
+import apiSlice from '.';
 import { TUpdateMessageArgs } from '../../types/args';
 import { IMessage } from '../../types/entities';
 
-const baseQuery = getAuthBaseQuery('messages');
-
-export const messagesApi = createApi({
-  reducerPath: 'messagesApi',
-  baseQuery,
+export const messagesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createMessage: builder.mutation<IMessage, FormData>({
       query: (payload) => ({
-        url: '/create',
+        url: 'messages/create',
         method: 'POST',
         body: payload,
       }),
@@ -19,21 +14,21 @@ export const messagesApi = createApi({
 
     readMessage: builder.mutation<IMessage, number>({
       query: (id) => ({
-        url: `/read/${id}`,
+        url: `messages/read/${id}`,
         method: 'PUT',
       }),
     }),
 
     deleteMessage: builder.mutation<IMessage, number>({
       query: (messageId) => ({
-        url: `/delete/${messageId}`,
+        url: `messages/delete/${messageId}`,
         method: 'DELETE',
       }),
     }),
 
     updateMessage: builder.mutation<IMessage, TUpdateMessageArgs>({
       query: ({ id, text }) => ({
-        url: `/update/${id}`,
+        url: `messages/update/${id}`,
         method: 'PUT',
         body: { text },
       }),

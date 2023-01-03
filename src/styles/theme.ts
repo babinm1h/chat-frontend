@@ -59,7 +59,7 @@ export const DarkTheme = {
     hover: '#222E3C',
     myMessage: '#2B5278',
     receivedMessage: '#182633',
-    icon: '#6B7782',
+    icon: '#778491',
     scrollThumb: '#4b545c',
     scrollTrack: '#26323d',
     active: '#2F3D4B',

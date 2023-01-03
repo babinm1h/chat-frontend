@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch';
 import { useSocket } from '../../../hooks/useSocket';
 import { IMessage, IUser } from '../../../types/entities';
 import { SocketEvents } from '../../../types/socketEvents.types';
-import { AttachIcon, CloseIcon, EditIcon, ReplyIcon, SendIcon } from '../../../assets/icons';
+import { AttachIcon, MicroIcon, SendIcon } from '../../../assets/icons';
 import { validate } from '../../../utils/validate';
 import { useDropzone } from 'react-dropzone';
 import DialogDropzone from '../../Dialog/DialogDropzone';
@@ -16,8 +16,11 @@ import { setEditableMessage, setReplyToMsg } from '../../../redux/slices/dialogs
 import { useUploadMultipleFiles } from '../../../hooks/useUploadMultipleFiles';
 import { useModal } from '../../../hooks/useModal';
 import TextareaAutosize from 'react-textarea-autosize';
-import { lineClampMixin, scrollbarMixin } from '../../../styles/common/mixins';
+import { scrollbarMixin } from '../../../styles/common/mixins';
 import DialogModalForm from '../DialogModalForm';
+import EmojiPicker from './EmojiPicker';
+import ReplyOrEditableMessage from './ReplyOrEditableMessage';
+import { useReactMediaRecorder } from 'react-media-recorder';
 
 const StWrapper = styled.div`
   display: flex;
@@ -27,12 +30,11 @@ const StWrapper = styled.div`
 `;
 
 const StForm = styled.form`
-  padding: 10px 20px;
-  flex-shrink: 0;
-  display: flex;
-  gap: 10px;
   position: relative;
   align-items: center;
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
 `;
 
 const StSend = styled.button<{ show: boolean }>`
@@ -41,7 +43,24 @@ const StSend = styled.button<{ show: boolean }>`
   justify-content: center;
   font-size: 28px;
   transform: rotate(45deg);
-  color: ${({ theme }) => theme.colors.common.primaryBlue};
+
+  background-color: transparent;
+  transition: all 0.25s ease-out;
+  opacity: ${({ show }) => (show ? 1 : 0)};
+  svg {
+    color: ${({ theme }) => theme.colors.common.primaryBlue};
+    &:hover {
+      color: ${({ theme }) => theme.colors.common.blueHover};
+    }
+  }
+`;
+
+const StMicro = styled.button<{ show: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #fff;
   background-color: transparent;
   transition: all 0.2s ease-out;
   opacity: ${({ show }) => (show ? 1 : 0)};
@@ -68,47 +87,26 @@ const StFileLabel = styled.label<{ isEditableMessage: boolean }>`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    transform: scale(1.1);
-  }
   ${({ isEditableMessage }) =>
     isEditableMessage &&
     `
-    pointer-events: none;
-    opacity:0;
+    display:none;
   `}
 `;
 
-const StReply = styled.div`
+const StFormActions = styled.div`
   display: flex;
-  gap: 2px;
-  padding: 8px 20px;
   align-items: center;
   gap: 15px;
-  .reply__icon {
-    color: ${({ theme }) => theme.colors.common.primaryBlue};
-    flex-shrink: 0;
-  }
-  .close__icon {
-    cursor: pointer;
-    flex-shrink: 0;
-  }
 `;
 
-const StReplyMsg = styled.div`
-  gap: 2px;
-  flex-direction: column;
-  flex: 100%;
+const StFormWrapper = styled.div`
+  padding: 10px 20px;
+  flex-shrink: 0;
   display: flex;
-  p {
-    ${lineClampMixin()}
-  }
-`;
-
-const StReplyUser = styled.div`
-  color: ${({ theme }) => theme.colors.common.primaryBlue};
-  font-weight: 500;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
 `;
 
 interface IForm {
@@ -119,9 +117,21 @@ interface IProps {
   user: IUser | null;
   editableMessage: IMessage | null;
   replyToMsg: null | IMessage;
+  bottomRef: React.RefObject<HTMLSpanElement>;
 }
 
-const DialogForm: FC<IProps> = ({ user, editableMessage, replyToMsg }) => {
+const DialogForm: FC<IProps> = ({ user, editableMessage, replyToMsg, bottomRef }) => {
+  const recorder = useReactMediaRecorder({
+    askPermissionOnMount: true,
+    video: false,
+    onStart() {
+      console.log(777);
+    },
+    onStop(blobUrl, blob) {
+      console.log(blob, blobUrl);
+    },
+  });
+
   const socket = useSocket();
   const { id } = useParams() as { id: string };
   const dispatch = useAppDispatch();
@@ -152,6 +162,8 @@ const DialogForm: FC<IProps> = ({ user, editableMessage, replyToMsg }) => {
         .catch((err) => notifyError(err.data.message));
     }
     if (replyToMsg) dispatch(setReplyToMsg(null));
+    if (!bottomRef.current) return;
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
     reset();
   };
 
@@ -172,6 +184,10 @@ const DialogForm: FC<IProps> = ({ user, editableMessage, replyToMsg }) => {
   const handleCancelReply = () => {
     dispatch(setReplyToMsg(null));
     setValue('message', '');
+  };
+
+  const handleEmoji = (emoji: string) => {
+    setValue('message', (watch('message') || '') + emoji);
   };
 
   const handleTyping = () => {
@@ -214,44 +230,48 @@ const DialogForm: FC<IProps> = ({ user, editableMessage, replyToMsg }) => {
   return (
     <>
       <StWrapper>
-        {replyToMsg ? (
-          <StReply>
-            <ReplyIcon size={26} className="reply__icon" />
-            <StReplyMsg>
-              <StReplyUser>{replyToMsg.creator?.firstName}</StReplyUser>
-              <p>{replyToMsg.text}</p>
-            </StReplyMsg>
-            <CloseIcon size={20} className="close__icon" onClick={handleCancelReply} />
-          </StReply>
-        ) : editableMessage ? (
-          <StReply>
-            <EditIcon size={24} className="reply__icon" />
-            <StReplyMsg>
-              <StReplyUser>Edit message</StReplyUser>
-              <p>{editableMessage.text}</p>
-            </StReplyMsg>
-            <CloseIcon size={20} className="close__icon" onClick={handleCancelEdit} />
-          </StReply>
-        ) : null}
-        <StForm onSubmit={handleSubmit(onSubmit)} {...getRootProps()}>
-          <StFileLabel htmlFor="file" isEditableMessage={!!editableMessage}>
-            <AttachIcon size={20} />
-            <StFileinput type={'file'} id="file" {...getInputProps({ multiple: true })} />
-          </StFileLabel>
-          <StInput
-            placeholder="New message..."
-            {...register('message', { onChange: handleTyping, ...validate(0, 1000) })}
-            maxRows={7}
-            autoFocus
-            autoComplete="off"
-          />
-          {
-            <StSend show={watch('message') ? true : false} disabled={isLoading || isMsgUpdating}>
-              <SendIcon />
-            </StSend>
-          }
-          {isDragActive && !editableMessage && <DialogDropzone />}
-        </StForm>
+        <ReplyOrEditableMessage
+          handleCancelEdit={handleCancelEdit}
+          handleCancelReply={handleCancelReply}
+          editableMessage={editableMessage}
+          replyToMsg={replyToMsg}
+        />
+        <StFormWrapper>
+          <StFormActions>
+            <StFileLabel htmlFor="file" isEditableMessage={!!editableMessage}>
+              <AttachIcon size={21} />
+              <StFileinput type={'file'} id="file" {...getInputProps({ multiple: true })} />
+            </StFileLabel>
+
+            <EmojiPicker handleEmoji={handleEmoji} />
+          </StFormActions>
+          <StForm onSubmit={handleSubmit(onSubmit)} {...getRootProps()}>
+            <StInput
+              placeholder="New message..."
+              {...register('message', { onChange: handleTyping, ...validate(0, 1000) })}
+              maxRows={7}
+              autoFocus
+              autoComplete="off"
+            />
+
+            {watch('message') ? (
+              <StSend show={true} disabled={isLoading || isMsgUpdating} type="submit">
+                <SendIcon />
+              </StSend>
+            ) : (
+              <StMicro
+                show={true}
+                disabled={isLoading || isMsgUpdating}
+                onPointerDown={recorder.startRecording}
+                onPointerUp={recorder.stopRecording}
+              >
+                <MicroIcon />
+              </StMicro>
+            )}
+
+            {isDragActive && !editableMessage && <DialogDropzone />}
+          </StForm>
+        </StFormWrapper>
       </StWrapper>
       <DialogModalForm
         dialogId={+id}

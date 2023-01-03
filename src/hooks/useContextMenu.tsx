@@ -18,7 +18,6 @@ export const useContextMenu = (menuWidth: number) => {
 
     setCoords({ x, y });
     setShowMenu(true);
-    // console.log(msg.height + y, window.innerHeight);
   };
 
   const handleClose = () => {

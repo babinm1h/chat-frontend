@@ -48,6 +48,9 @@ input::-ms-clear {
 button {
     cursor: pointer;
     background: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 button::-moz-focus-inner {
     padding: 0;
@@ -84,6 +87,9 @@ body {
     body {
         color: #fff;
         background-color: #0e1621;
+    }
+    svg {
+        color: #778491;
     }
 }
 

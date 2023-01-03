@@ -1,14 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IAuthResponse } from "../../API/auth.service";
-import { IUser } from "../../types/entities";
-import { removeTokenCookie } from "../../utils/cookie.helpers";
-import { checkAuth, login, registrate } from "../thunks/auth.thunks";
-import { IAuthState } from "../types/auth.slice.types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IAuthResponse } from '../../API/auth.service';
+import { IUser } from '../../types/entities';
+import { removeTokenCookie } from '../../utils/cookie.helpers';
+import { checkAuth, login, registrate } from '../thunks/auth.thunks';
+import { IAuthState } from '../types/auth.slice.types';
 
 const initialState: IAuthState = {
   isProcessing: true,
-  loginError: "",
-  registerError: "",
+  loginError: '',
+  registerError: '',
   user: null,
   isCheckingAuth: true,
   isAuth: false,
@@ -16,20 +16,24 @@ const initialState: IAuthState = {
 
 const authSlice = createSlice({
   initialState,
-  name: "auth",
+  name: 'auth',
   reducers: {
     logout(state) {
       state.user = null;
-      state.loginError = "";
-      state.registerError = "";
+      state.loginError = '';
+      state.registerError = '';
       state.isAuth = false;
       removeTokenCookie();
+    },
+
+    setAuthUser(state, action: PayloadAction<IUser>) {
+      state.user = action.payload;
     },
   },
   extraReducers: {
     [registrate.fulfilled.type]: (state, action: PayloadAction<IAuthResponse>) => {
-      state.loginError = "";
-      state.registerError = "";
+      state.loginError = '';
+      state.registerError = '';
       state.isProcessing = false;
       state.user = action.payload.user;
       state.isAuth = true;
@@ -44,8 +48,8 @@ const authSlice = createSlice({
     },
 
     [login.fulfilled.type]: (state, action: PayloadAction<IAuthResponse>) => {
-      state.loginError = "";
-      state.registerError = "";
+      state.loginError = '';
+      state.registerError = '';
       state.isProcessing = false;
       state.user = action.payload.user;
       state.isAuth = true;
@@ -77,4 +81,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { logout } = authSlice.actions;
+export const { logout, setAuthUser } = authSlice.actions;

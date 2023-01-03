@@ -10,10 +10,6 @@ export const getMessageTime = (date?: Date) => {
   return dayjs(date).format('HH:mm');
 };
 
-export const formatDate = (d: Date | string) => {
-  return dayjs(d).format('DD.MM.YYYY');
-};
-
 export const getMonthDays = (month = dayjs().month()) => {
   month = Math.floor(month);
 
@@ -42,4 +38,8 @@ export const getFormattedHours = () => {
     hrs.push(dayjs().hour(i).format('HH:00'));
   }
   return hrs;
+};
+
+export const formatDate = (format: string, initDate?: Date | string) => {
+  return initDate ? dayjs(initDate).format(format) : dayjs().format(format);
 };

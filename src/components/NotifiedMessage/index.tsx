@@ -6,6 +6,7 @@ import { StAvatar } from '../../styles/common';
 import { lineClampMixin } from '../../styles/common/mixins';
 import { IMessage } from '../../types/entities';
 import { AllRoutes } from '../AppRoutes';
+import UserAvatar from '../UserAvatar';
 
 const StWrapper = styled.div`
   display: flex;
@@ -36,13 +37,7 @@ const NotifiedMessage: FC<IProps> = ({ message }) => {
   const nav = useNavigate();
   return (
     <StWrapper onClick={() => nav(AllRoutes.dialogs + `/${message.dialogId}`)}>
-      <StAvatar size="medium">
-        {message.creator.avatar ? (
-          <img src={message.creator.avatar} alt={message.creator.firstName} />
-        ) : (
-          <Avatar size="45px" round name={message.creator.firstName} />
-        )}
-      </StAvatar>
+      <UserAvatar size="medium" fakeSize="45px" user={message.creator} />
       <StMsg>
         <StName>{message.creator.firstName}</StName>
         <StText>{message.text}</StText>
