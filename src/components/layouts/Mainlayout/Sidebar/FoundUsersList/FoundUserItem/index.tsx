@@ -1,7 +1,8 @@
-import { FC } from "react";
-import Avatar from "react-avatar";
-import styled from "styled-components";
-import { StAvatar } from "../../../../../../styles/common";
+import { FC } from 'react';
+import Avatar from 'react-avatar';
+import styled from 'styled-components';
+import { StAvatar } from '../../../../../../styles/common';
+import { lineClampMixin } from '../../../../../../styles/common/mixins';
 
 const StWrapper = styled.li`
   display: flex;
@@ -24,6 +25,7 @@ const StInfo = styled.div`
 
 const StName = styled.div`
   color: ${({ theme }) => theme.currentTheme.text.primary};
+  ${lineClampMixin()}
 `;
 
 const StHeader = styled.div`

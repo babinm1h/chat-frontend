@@ -19,6 +19,8 @@ import { addRequest } from './redux/slices/friends.slice';
 import { IMessage, IDialog, IFriendRequest } from './types/entities';
 import { notifyMessage } from './utils/toast.helpers';
 
+const sound = new Audio('/sounds/msg.mp3');
+
 const App = () => {
   const dispatch = useAppDispatch();
   const isCheckingAuth = useAppSelector((state) => state.auth.isCheckingAuth);
@@ -31,6 +33,7 @@ const App = () => {
   useEffect(() => {
     socket.on(SocketEvents.receiveMsg, (msg: IMessage) => {
       dispatch(addMessage(msg));
+      sound.play();
       if (!id || +id !== +msg.dialogId) {
         notifyMessage(<NotifiedMessage message={msg} />);
       }
@@ -55,6 +58,7 @@ const App = () => {
     socket.on(SocketEvents.receiveFriendReq, (req: IFriendRequest) => {
       dispatch(incrFriendRequsts());
       dispatch(addRequest(req));
+      sound.play();
     });
 
     return () => {

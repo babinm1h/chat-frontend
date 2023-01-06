@@ -70,7 +70,7 @@ const SidebarHeader: FC<IProps> = ({ authUser, searchMode, activeTab, setActiveT
   const tabs = useMemo(() => {
     return [
       { tabContent: 'Dialogs', id: 1, to: AllRoutes.dialogs },
-      { tabContent: 'Group Dialogs', id: 2, to: AllRoutes.group_dialogs },
+      { tabContent: 'Groups', id: 2, to: AllRoutes.group_dialogs },
     ];
   }, []);
 

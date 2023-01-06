@@ -27,15 +27,13 @@ const StModal = styled.div`
     border-radius: 0;
     max-height: 100vh;
   }
-  /* @media (max-width: 700px) {
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 0;
-  } */
+  @media (max-width: 500px) {
+    min-width: 100%;
+  }
   @media (max-height: 500px) {
-    width: 100% !important;
     height: 100% !important;
     border-radius: 0;
+    max-height: 100vh;
   }
 `;
 

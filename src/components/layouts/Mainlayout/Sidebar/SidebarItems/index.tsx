@@ -37,6 +37,7 @@ const StDate = styled.span`
 
 const StName = styled.div`
   color: ${({ theme }) => theme.currentTheme.text.primary};
+  ${lineClampMixin()}
 `;
 
 const StWrapper = styled.li`
