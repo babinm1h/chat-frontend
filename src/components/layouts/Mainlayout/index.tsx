@@ -1,6 +1,7 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren, useRef, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+import AsidePanel from '../../AsidePanel';
 import Sidebar from './Sidebar';
 
 const StWrapper = styled.div`
@@ -10,11 +11,28 @@ const StWrapper = styled.div`
   color: ${({ theme }) => theme.currentTheme.text.primary};
 `;
 
-const Mainlayout: FC<PropsWithChildren> = ({ children }) => {
+const StContent = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+`;
+
+const Mainlayout: FC<PropsWithChildren> = () => {
+  const asideRef = useRef<HTMLDivElement>(null);
+  const [asideWidth, setAsideWidth] = useState(0);
+
+  React.useEffect(() => {
+    if (!asideRef.current) return;
+    setAsideWidth(asideRef.current?.clientWidth);
+  }, [asideRef.current]);
+
   return (
     <StWrapper>
-      <Sidebar />
-      <Outlet />
+      <AsidePanel asideRef={asideRef} />
+      <StContent style={{ paddingLeft: `${asideWidth}px` }}>
+        <Sidebar />
+        <Outlet />
+      </StContent>
     </StWrapper>
   );
 };

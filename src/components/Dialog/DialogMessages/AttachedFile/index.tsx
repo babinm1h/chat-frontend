@@ -53,7 +53,7 @@ const StCircle = styled.div`
     width: 50%;
     height: 50%;
     object-fit: cover;
-    color: ${({ theme }) => theme.currentTheme.text.primary};
+    color: #fff;
   }
 `;
 

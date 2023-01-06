@@ -14,6 +14,7 @@ export interface IUser extends IBaseEntity {
   country: string;
   gender: TGender;
   status?: string;
+  friendRequestsCount: number;
 }
 
 export interface IDialog extends IBaseEntity {
@@ -56,8 +57,26 @@ export enum FileTypes {
   file = 'file',
 }
 
+export enum FriendRequestStatus {
+  accepted = 'accepted',
+  rejected = 'rejected',
+  default = 'default',
+}
+
 export interface IAttachment {
   type: FileTypes;
   path: string;
   id: number;
+  name: string;
+}
+
+export interface IFriendRequest extends IBaseEntity {
+  receiver: IUser;
+  sender: IUser;
+  status: FriendRequestStatus;
+}
+
+export interface IFriend extends IBaseEntity {
+  receiver: IUser;
+  sender: IUser;
 }

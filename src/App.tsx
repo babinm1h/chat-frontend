@@ -1,17 +1,72 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 import AppRoutes from './components/AppRoutes';
 import { useAppDispatch } from './hooks/useAppDispatch';
 import { useAppSelector } from './hooks/useAppSelector';
 import { checkAuth } from './redux/thunks/auth.thunks';
 import { ToastContainer } from 'react-toastify';
-import theme, { DarkTheme, LightTheme, ThemesEnum } from './styles/theme';
+import theme, { DarkTheme, LightTheme } from './styles/theme';
 import 'react-toastify/dist/ReactToastify.css';
+import { AppThemes } from './context/themeContext';
+import { useTheme } from './hooks/useTheme';
+import { useSocket } from './hooks/useSocket';
+import { SocketEvents } from './types/socketEvents.types';
+import { useParams } from 'react-router-dom';
+import NotifiedMessage from './components/NotifiedMessage';
+import { incrFriendRequsts, userSelector } from './redux/slices/auth.slice';
+import { addMessage, addDialog, deleteMessage, updateMessage, readMessage } from './redux/slices/dialogs.slice';
+import { addRequest } from './redux/slices/friends.slice';
+import { IMessage, IDialog, IFriendRequest } from './types/entities';
+import { notifyMessage } from './utils/toast.helpers';
 
 const App = () => {
   const dispatch = useAppDispatch();
   const isCheckingAuth = useAppSelector((state) => state.auth.isCheckingAuth);
-  const [currTheme, setCurrTheme] = useState<ThemesEnum>(getTheme());
+  const auth = useAppSelector(userSelector);
+  const themeCtx = useTheme();
+
+  const { id } = useParams() as { id: string };
+  const socket = useSocket();
+
+  useEffect(() => {
+    socket.on(SocketEvents.receiveMsg, (msg: IMessage) => {
+      dispatch(addMessage(msg));
+      if (!id || +id !== +msg.dialogId) {
+        notifyMessage(<NotifiedMessage message={msg} />);
+      }
+    });
+
+    socket.on(SocketEvents.createDialog, ({ dialog }: { dialog: IDialog }) => {
+      dispatch(addDialog(dialog));
+    });
+
+    socket.on(SocketEvents.deleteMsg, (msg: IMessage) => {
+      dispatch(deleteMessage(msg));
+    });
+
+    socket.on(SocketEvents.updateMsg, (msg: IMessage) => {
+      dispatch(updateMessage(msg));
+    });
+
+    socket.on(SocketEvents.readMsg, (msg: IMessage) => {
+      dispatch(readMessage(msg));
+    });
+
+    socket.on(SocketEvents.receiveFriendReq, (req: IFriendRequest) => {
+      dispatch(incrFriendRequsts());
+      dispatch(addRequest(req));
+    });
+
+    return () => {
+      // socket.off(SocketEvents.receiveMsg);
+      socket.off(SocketEvents.connect);
+    };
+  }, [socket, id]);
+
+  useEffect(() => {
+    if (!auth) return;
+    socket.connect();
+  }, [auth]);
 
   useEffect(() => {
     dispatch(checkAuth());
@@ -21,25 +76,8 @@ const App = () => {
     colors: theme.colors,
     fontSize: theme.fontSize,
     shadow: theme.shadow,
-    currentTheme: currTheme === ThemesEnum.dark ? DarkTheme : LightTheme,
+    currentTheme: themeCtx.theme === AppThemes.dark ? DarkTheme : LightTheme,
   };
-
-  function getTheme() {
-    const theme = localStorage?.getItem('chatTheme');
-    if (theme && (Object.values(ThemesEnum) as string[]).includes(theme)) {
-      return theme as ThemesEnum;
-    }
-
-    const userMedia = window.matchMedia('(prefers-color-scheme: light)');
-    if (userMedia.matches) return ThemesEnum.dark;
-
-    return ThemesEnum.dark;
-  }
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = currTheme;
-    localStorage.setItem('chatTheme', currTheme);
-  }, [currTheme]);
 
   if (isCheckingAuth) {
     return <>Loading</>;

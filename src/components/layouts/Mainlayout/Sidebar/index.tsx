@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSidebar } from '../../../../hooks/componentsHooks/useSidebar';
 import { scrollbarMixin } from '../../../../styles/common/mixins';
-import { AllRoutes } from '../../../AppRoutes';
 import DialogsList from './DialogsList';
 import FoundUsersList from './FoundUsersList';
 import GroupDialogsList from './GroupDialogsList';
@@ -13,7 +12,7 @@ const StSidebar = styled.aside`
   flex-direction: column;
   flex-shrink: 0;
   position: relative;
-  width: 400px;
+  width: 380px;
   background-color: ${({ theme }) => theme.currentTheme.background.secondary};
   height: 100%;
   overflow-y: auto;

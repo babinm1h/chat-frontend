@@ -21,6 +21,9 @@ const StPlayBtn = styled.button`
 const StDuration = styled.span`
   font-size: 10px;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const StProgress = styled.div`
@@ -48,6 +51,22 @@ const StThumb = styled.div`
   top: -6px;
   left: -2px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+`;
+
+const StLineBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const StLineWrapper = styled.div`
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+`;
+
+const StName = styled.div`
+  font-size: 12px;
 `;
 
 interface IProps {
@@ -171,15 +190,23 @@ const AudioPlayer: FC<IProps> = ({ audio, activeAudio, onSetActiveAudio }) => {
   return (
     <StPlayer>
       <StPlayBtn onClick={togglePlay}>
-        {isPlaying && activeAudio?.id === audio.id ? <PauseIcon size={38} /> : <PlayIcon size={38} />}
+        {isPlaying && activeAudio?.id === audio.id ? <PauseIcon size={40} /> : <PlayIcon size={40} />}
       </StPlayBtn>
-      <StDuration>{audioRef.current.currentTime ? formatDuration(audioRef.current.currentTime) : '00:00'}</StDuration>
-      <StProgress ref={trackRef} onMouseDown={handleMouseDown}>
-        <StFill style={{ width: `${progress}%` }} />
-        <StThumb style={{ left: `${progress}%` }} />
-      </StProgress>
-      <audio hidden preload="none" key={audio.id} src={audio.path} ref={audioElemRef} />
-      <StDuration>{duration ? formatDuration(duration) : '00:00'}</StDuration>
+
+      <StLineWrapper>
+        <StName>{audio.name}</StName>
+        <StLineBlock>
+          <StDuration>
+            {audioRef.current.currentTime ? formatDuration(audioRef.current.currentTime) : '00:00'}
+          </StDuration>
+          <StProgress ref={trackRef} onMouseDown={handleMouseDown}>
+            <StFill style={{ width: `${progress}%` }} />
+            <StThumb style={{ left: `${progress}%` }} />
+          </StProgress>
+          <audio hidden preload="none" key={audio.id} src={audio.path} ref={audioElemRef} />
+          <StDuration>{duration ? formatDuration(duration) : '00:00'}</StDuration>
+        </StLineBlock>
+      </StLineWrapper>
     </StPlayer>
   );
 };

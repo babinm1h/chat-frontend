@@ -98,6 +98,9 @@ body {
         color: #222;
         background-color: #ffff;
     }
+    svg {
+        color: #858585;
+    }
 }
 
 #root {
@@ -112,4 +115,9 @@ body {
 
 .Toastify__toast-theme--dark {
     background-color: #182633 !important;
+}
+.Toastify__toast-body {
+    svg {
+        color: #fff;
+    }
 }

@@ -15,10 +15,13 @@ const StUnreaded = styled.span`
   font-size: 12px;
   background-color: #3d546a;
   padding: 2px 6px;
-  border-radius: 24px;
+  border-radius: 50%;
   font-weight: 500;
   vertical-align: middle;
   flex-shrink: 0;
+  height: 18px;
+  color: #fff;
+  min-width: 18px;
 `;
 
 const StMessage = styled.p`
@@ -32,6 +35,10 @@ const StDate = styled.span`
   font-size: 13px;
 `;
 
+const StName = styled.div`
+  color: ${({ theme }) => theme.currentTheme.text.primary};
+`;
+
 const StWrapper = styled.li`
   display: flex;
   align-items: center;
@@ -43,12 +50,15 @@ const StWrapper = styled.li`
     background-color: ${({ theme }) => theme.currentTheme.background.hover};
   }
   &.active {
-    background-color: ${({ theme }) => theme.currentTheme.background.myMessage};
+    background-color: ${({ theme }) => theme.currentTheme.background.activeDialog};
     ${StMessage} {
-      color: ${({ theme }) => theme.currentTheme.text.primary} !important;
+      color: #fff;
     }
     ${StDate} {
-      color: ${({ theme }) => theme.currentTheme.text.primary} !important;
+      color: #fff;
+    }
+    ${StName} {
+      color: #fff;
     }
     ${StUnreaded} {
       background-color: #7aa3c8;
@@ -68,10 +78,6 @@ const StInfo = styled.div`
   padding-right: 5px;
   display: flex;
   flex-direction: column;
-`;
-
-const StName = styled.div`
-  color: ${({ theme }) => theme.currentTheme.text.primary};
 `;
 
 const StHeader = styled.div`

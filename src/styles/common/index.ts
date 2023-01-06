@@ -42,12 +42,13 @@ export const StAvatar = styled.div<{ size?: 'big' | 'small' | 'medium' | 'large'
     border: 1px solid ${({ theme }) => theme.currentTheme.background.secondary};
   }
 `;
-export const StMenuItem = styled.li`
+export const StMenuItem = styled.li<{ centered?: boolean }>`
   display: flex;
   gap: 10px;
   padding: 10px 20px;
   transition: all 0.2s ease-in;
   cursor: pointer;
+  position: relative;
   color: ${({ theme }) => theme.currentTheme.text.primary};
   a {
     color: ${({ theme }) => theme.currentTheme.text.primary};
@@ -64,6 +65,11 @@ export const StMenuItem = styled.li`
   &.logout {
     color: red;
   }
+  ${({ centered }) =>
+    centered &&
+    `
+    justify-content:center;
+  `}
 `;
 
 export const StContextMenuItem = styled.div`

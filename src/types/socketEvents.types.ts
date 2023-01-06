@@ -16,4 +16,7 @@ export enum SocketEvents {
 
   disconnect = 'disconnect',
   connect = 'connect',
+
+  createFriendReq = 'createFriendReq',
+  receiveFriendReq = 'receiveFriendReq',
 }

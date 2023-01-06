@@ -12,7 +12,7 @@ import { useDropzone } from 'react-dropzone';
 import DialogDropzone from '../../Dialog/DialogDropzone';
 import { useCreateMessageMutation, useUpdateMessageMutation } from '../../../redux/services/messagesApi';
 import { notifyError } from '../../../utils/toast.helpers';
-import { setEditableMessage, setReplyToMsg } from '../../../redux/slices/dialogs.slice';
+import { addMessage, setEditableMessage, setReplyToMsg } from '../../../redux/slices/dialogs.slice';
 import { useUploadMultipleFiles } from '../../../hooks/useUploadMultipleFiles';
 import { useModal } from '../../../hooks/useModal';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -159,6 +159,7 @@ const DialogForm: FC<IProps> = ({ user, editableMessage, replyToMsg, bottomRef }
 
       createMessage(fd)
         .unwrap()
+        .then((res) => dispatch(addMessage(res)))
         .catch((err) => notifyError(err.data.message));
     }
     if (replyToMsg) dispatch(setReplyToMsg(null));
@@ -172,8 +173,8 @@ const DialogForm: FC<IProps> = ({ user, editableMessage, replyToMsg, bottomRef }
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: true });
 
   const handleCloseMessageModal = () => {
-    onClose();
     resetFiles();
+    onClose();
   };
 
   const handleCancelEdit = () => {

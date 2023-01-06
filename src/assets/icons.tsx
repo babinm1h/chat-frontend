@@ -1,13 +1,20 @@
-import { FiMenu } from 'react-icons/fi';
-import { AiOutlineClose, AiOutlineCheck, AiFillCamera, AiOutlineSmile } from 'react-icons/ai';
+import { FiMenu, FiSettings } from 'react-icons/fi';
+import { AiOutlineClose, AiOutlineCheck, AiFillCamera, AiOutlineSmile, AiOutlineUser } from 'react-icons/ai';
 import { RiSendPlaneFill, RiPauseCircleFill, RiPlayCircleFill } from 'react-icons/ri';
-import { BsFillFileEarmarkArrowDownFill, BsFillReplyFill } from 'react-icons/bs';
+import {
+  BsFillFileEarmarkArrowDownFill,
+  BsFillReplyFill,
+  BsChatDots,
+  BsMoonStarsFill,
+  BsFillSunFill,
+} from 'react-icons/bs';
 import { MdDelete, MdModeEdit } from 'react-icons/md';
 import { ImAttachment } from 'react-icons/im';
 import { IoSearchSharp } from 'react-icons/io5';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
-import { BiCheckDouble, BiCheck } from 'react-icons/bi';
+import { BiCheckDouble, BiCheck, BiLogOut } from 'react-icons/bi';
 import { HiOutlineMicrophone } from 'react-icons/hi';
+import { GoHome } from 'react-icons/go';
 
 export {
   FiMenu as MenuIcon,
@@ -29,4 +36,11 @@ export {
   BiCheckDouble as ReadedIcon,
   AiOutlineSmile as EmojiIcon,
   HiOutlineMicrophone as MicroIcon,
+  FiSettings as SettingsIcon,
+  BsChatDots as ChatIcon,
+  AiOutlineUser as UsersIcon,
+  BsMoonStarsFill as MoonIcon,
+  BsFillSunFill as SunIcon,
+  BiLogOut as LogoutIcon,
+  GoHome as HomeIcon,
 };

@@ -23,7 +23,7 @@ const StText = styled.p`
   ${lineClampMixin(3)};
 `;
 
-const StMsg = styled.p`
+const StMsg = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;

@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAuthResponse } from '../../API/auth.service';
 import { IUser } from '../../types/entities';
 import { removeTokenCookie } from '../../utils/cookie.helpers';
+import { RootState } from '../store';
 import { checkAuth, login, registrate } from '../thunks/auth.thunks';
 import { IAuthState } from '../types/auth.slice.types';
 
@@ -28,6 +29,22 @@ const authSlice = createSlice({
 
     setAuthUser(state, action: PayloadAction<IUser>) {
       state.user = action.payload;
+    },
+    updateStatus(state, action: PayloadAction<string>) {
+      if (!state.user) return;
+      state.user.status = action.payload;
+    },
+
+    decrFriendRequsts(state) {
+      if (state.user && state.user.friendRequestsCount > 0) {
+        state.user.friendRequestsCount -= 1;
+      }
+    },
+
+    incrFriendRequsts(state) {
+      if (state.user && state.user.friendRequestsCount > 0) {
+        state.user.friendRequestsCount += 1;
+      }
     },
   },
   extraReducers: {
@@ -81,4 +98,7 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { logout, setAuthUser } = authSlice.actions;
+export const { logout, setAuthUser, updateStatus, decrFriendRequsts, incrFriendRequsts } = authSlice.actions;
+
+const userSelect = (state: RootState) => state.auth.user;
+export const userSelector = createSelector(userSelect, (user) => user);

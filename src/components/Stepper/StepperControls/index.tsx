@@ -1,6 +1,6 @@
-import React, { FC } from "react";
-import styled from "styled-components";
-import Button from "../../UI/Button";
+import React, { FC } from 'react';
+import styled from 'styled-components';
+import Button from '../../UI/Button';
 
 const StBtns = styled.div`
   display: flex;
@@ -16,7 +16,8 @@ interface IProps {
 }
 
 const StepperControls: FC<IProps> = ({ setActiveStep, activeStep, stepsLength }) => {
-  const handleNext = () => {
+  const handleNext = (e: React.MouseEvent) => {
+    e.preventDefault();
     setActiveStep(activeStep + 1);
   };
 
@@ -27,11 +28,15 @@ const StepperControls: FC<IProps> = ({ setActiveStep, activeStep, stepsLength })
 
   return (
     <StBtns>
-      <Button onClick={handlePrev}>Prev</Button>
+      <Button onClick={handlePrev} type="button">
+        Prev
+      </Button>
       {activeStep === stepsLength ? (
         <Button type="submit">Submit</Button>
       ) : (
-        <Button onClick={handleNext}>Next</Button>
+        <Button onClick={handleNext} type="button">
+          Next
+        </Button>
       )}
     </StBtns>
   );

@@ -32,22 +32,23 @@ export default theme;
 
 export const LightTheme = {
   text: {
-    primary: '#00000',
+    primary: '#000000',
     secondary: '#7d7f81',
     disabled: 'rgba(#fff, 0.5)',
   },
   background: {
-    icon: '#6B7782',
-    primary: '',
-    secondary: '',
-    tertiary: '',
-    hover: '',
-    myMessage: '',
-    receivedMessage: '',
-    scrollThumb: '',
-    scrollTrack: '',
-    active: '',
-    border: `rgba(0,0,0, 0.2)`,
+    icon: '#858585',
+    primary: `rgba(0,0,0, 0.1)`,
+    secondary: '#fff',
+    tertiary: `rgba(0,0,0, 0.12)`,
+    hover: `rgba(0,0,0, 0.1)`,
+    myMessage: '#EFFCDE',
+    receivedMessage: '#fff',
+    scrollThumb: `rgba(0,0,0, 0.2)`,
+    scrollTrack: '#fff',
+    active: '#2F3D4B',
+    border: `rgba(0,0,0, 0.4)`,
+    activeDialog: '#41A0DA',
   },
 };
 
@@ -64,6 +65,7 @@ export const DarkTheme = {
     scrollTrack: '#26323d',
     active: '#2F3D4B',
     border: `rgba(255,255,255, 0.2)`,
+    activeDialog: '#2B5278',
   },
   text: {
     primary: '#fff',
@@ -71,9 +73,3 @@ export const DarkTheme = {
     disabled: '#ffffff66',
   },
 };
-
-//
-export enum ThemesEnum {
-  light = 'light',
-  dark = 'dark',
-}

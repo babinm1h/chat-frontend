@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { v4 } from "uuid";
-import { notifyError } from "../utils/toast.helpers";
+import { useState } from 'react';
+import { v4 } from 'uuid';
+import { notifyError } from '../utils/toast.helpers';
 
 export type FileWithId = File & { id: string };
 

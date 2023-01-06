@@ -8,6 +8,8 @@ import { useUpdateUserMutation } from '../../../../../redux/services/usersApi';
 import { notifyError } from '../../../../../utils/toast.helpers';
 import { lineClampMixin } from '../../../../../styles/common/mixins';
 import UserAvatar from '../../../../UserAvatar';
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch';
+import { updateStatus } from '../../../../../redux/slices/auth.slice';
 
 const StWrapper = styled.div`
   width: 320px;
@@ -25,7 +27,7 @@ const StOverlay = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
-  z-index: 5;
+  z-index: 101;
   top: 0;
   right: 0;
   left: 0;
@@ -80,6 +82,7 @@ interface IProps {
 }
 
 const BurgerMenu: FC<IProps> = ({ onClose, authUser, isOpen }) => {
+  const dispatch = useAppDispatch();
   const [edit, setEdit] = useState(false);
   const [status, setStatus] = useState(authUser.status || '');
   const [updateUser, { isLoading }] = useUpdateUserMutation();
@@ -88,7 +91,11 @@ const BurgerMenu: FC<IProps> = ({ onClose, authUser, isOpen }) => {
     try {
       if (edit) {
         setEdit(false);
-        if (status !== authUser.status) await updateUser({ status });
+
+        if (status !== authUser.status) {
+          dispatch(updateStatus(status));
+          await updateUser({ status });
+        }
       } else {
         setEdit(true);
       }

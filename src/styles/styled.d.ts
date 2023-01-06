@@ -27,6 +27,7 @@ declare module 'styled-components' {
         scrollThumb: string;
         scrollTrack: string;
         active: string;
+        activeDialog: string;
         border: string;
       };
       text: {

@@ -24,6 +24,7 @@ const StMessage = styled.div<{ repeated: boolean }>`
   word-break: break-all;
   flex-direction: column;
   min-width: 100px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   &:after {
     content: '';
     position: absolute;
@@ -66,13 +67,15 @@ const StText = styled.p`
 
 const StBlockDate = styled.div`
   color: ${({ theme }) => theme.currentTheme.text.primary};
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: sticky;
+  /* position: sticky; */
   width: 100%;
   top: 0;
   z-index: 2;
+  opacity: 0.8;
   p {
     border-radius: 8px;
     font-size: 14px;
@@ -224,7 +227,7 @@ const MessageItem: FC<IProps> = ({
             <div className="circle">
               <FileIcon size={20} />
             </div>
-            <span>Download</span>
+            <span>{f.name}</span>
           </StFileLink>
         ))}
       {attachedAudios.length > 0 &&

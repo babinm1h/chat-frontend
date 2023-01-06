@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAppDispatch } from '../../../../../../hooks/useAppDispatch';
 import { useModal } from '../../../../../../hooks/useModal';
+import { useSocket } from '../../../../../../hooks/useSocket';
 import { logout } from '../../../../../../redux/slices/auth.slice';
 import { StMenuItem } from '../../../../../../styles/common';
 import { AllRoutes } from '../../../../../AppRoutes';
@@ -21,7 +22,7 @@ interface IProps {}
 
 const MenuItems: FC<IProps> = () => {
   const dispatch = useAppDispatch();
-  const nav = useNavigate();
+  const nav = useNavigate();const socket = useSocket();
 
   const { isOpen, onClose, onOpen } = useModal();
   const { isOpen: isCreateGroupOpen, onClose: onCreateGroupClose, onOpen: onCreateGroupOpen } = useModal();
@@ -29,12 +30,14 @@ const MenuItems: FC<IProps> = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    socket.disconnect();
     nav(AllRoutes.login);
   };
 
   return (
     <>
       <StMenuList>
+        <MenuLink to={AllRoutes.dialogs}>Messages</MenuLink>
         <MenuLink to={AllRoutes.home}>Main Page</MenuLink>
         <StMenuItem onClick={onCreateGroupOpen}>Create Group</StMenuItem>
         <MenuItemWithSubmenu label="Settings">

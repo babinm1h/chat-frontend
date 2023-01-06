@@ -2,12 +2,14 @@ import { configureStore, combineReducers, ThunkDispatch, AnyAction } from '@redu
 import apiSlice from './services';
 import authSlice from './slices/auth.slice';
 import dialogsSlice from './slices/dialogs.slice';
+import friendsSlice from './slices/friends.slice';
 import playerSlice from './slices/player.slice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
   dialogs: dialogsSlice,
   player: playerSlice,
+  friends: friendsSlice,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 

@@ -138,7 +138,7 @@ const dialogsSlice = createSlice({
     [fetchAllDialogs.fulfilled.type]: (state, action: PayloadAction<IDialog[]>) => {
       state.isDialogsFetching = false;
       state.dialogsError = '';
-      state.dialogs = action.payload;
+      state.dialogs = action.payload
     },
     [fetchAllDialogs.pending.type]: (state, action) => {
       state.isDialogsFetching = true;
