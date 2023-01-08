@@ -1,10 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useDialog } from '../../hooks/componentsHooks/useDialog';
 import DialogForm from '../forms/DialogForm';
-import DotsLoader from '../UI/DotsLoader';
 import DialogMessages from './DialogMessages';
-import UserAvatar from '../UserAvatar';
+import DialogHeader from './DialogHeader';
+import CallOverlay from '../Call/CallOverlay';
+import { BiMessageSquareCheck } from 'react-icons/bi';
+import MessageSkeleton from './DialogMessages/MessageSkeleton';
+import { IUser } from '../../types/entities';
 
 const StWrapper = styled.div`
   display: flex;
@@ -12,68 +15,62 @@ const StWrapper = styled.div`
   width: 100%;
   color: white;
   flex-direction: column;
-`;
-
-const StHeader = styled.header`
-  display: flex;
-  background-color: ${({ theme }) => theme.currentTheme.background.secondary};
-  padding: 10px 20px;
-  width: 100%;
-  align-items: center;
-  gap: 15px;
-`;
-
-const StReceiver = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StLastOnline = styled.div`
-  color: ${({ theme }) => theme.currentTheme.text.secondary};
-`;
-
-const StMobile = styled.div`
-  color: ${({ theme }) => theme.currentTheme.text.primary};
-`;
-
-const StTyping = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  position: relative;
 `;
 
 const Dialog = () => {
-  const { activeDialog, isActiveDialogFetching, user, typingUser, editableMessage, replyToMsg, bottomRef } =
-    useDialog();
+  const {
+    activeDialog,
+    isActiveDialogFetching,
+    user,
+    typingUser,
+    editableMessage,
+    replyToMsg,
+    bottomRef,
+    peer,
+    callDialogId,
+  } = useDialog();
 
-  if (!activeDialog || isActiveDialogFetching) {
-    return <>Loading</>;
-  }
+  const isLoading = !activeDialog || isActiveDialogFetching;
 
-  const receiver = user?.id === activeDialog.receiverId ? activeDialog.creator : activeDialog.receiver;
+  const receiver = user?.id === activeDialog?.receiverId ? activeDialog?.creator : activeDialog?.receiver;
 
   return (
     <StWrapper>
-      <StHeader>
-        <UserAvatar size="small" fakeSize="32px" user={receiver} />
-        <StReceiver>
-          <StMobile>{receiver.firstName}</StMobile>
-          <StLastOnline>
-            {typingUser ? (
-              <StTyping>
-                <DotsLoader />
-                <p>{typingUser} is typing</p>
-              </StTyping>
-            ) : (
-              `last seen 20 min ago`
-            )}
-          </StLastOnline>
-        </StReceiver>
-      </StHeader>
-      <DialogMessages messages={activeDialog.messages} user={user} bottomRef={bottomRef} />
-      <DialogForm user={user} editableMessage={editableMessage} replyToMsg={replyToMsg} bottomRef={bottomRef} />
+      {isLoading ? (
+        <MessagesLoader />
+      ) : (
+        <>
+          {callDialogId === activeDialog?.id && <CallOverlay />}
+          <DialogHeader receiver={receiver || ({} as IUser)} typingUser={typingUser} peer={peer} authUser={user} />
+          <DialogMessages messages={activeDialog.messages} user={user} bottomRef={bottomRef} />
+          <DialogForm user={user} editableMessage={editableMessage} replyToMsg={replyToMsg} bottomRef={bottomRef} />
+        </>
+      )}
     </StWrapper>
   );
 };
 
 export default Dialog;
+
+const StList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+`;
+
+const MessagesLoader = () => {
+  const theme = useTheme();
+  const bgc = theme.currentTheme.background.receivedMessage;
+
+  return (
+    <StList>
+      {Array(10)
+        .fill(``)
+        .map((_, idx) => (
+          <MessageSkeleton key={idx} background={bgc} idx={idx} />
+        ))}
+    </StList>
+  );
+};

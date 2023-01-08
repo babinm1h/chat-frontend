@@ -1,3 +1,5 @@
+import { IUser } from "./entities";
+
 export enum SocketEvents {
   createMsg = 'message:create',
   deleteMsg = 'message:delete',
@@ -19,4 +21,21 @@ export enum SocketEvents {
 
   createFriendReq = 'createFriendReq',
   receiveFriendReq = 'receiveFriendReq',
+
+  onVideoCallInit = 'onVideoCallInit',
+  videoCallAccept = 'VideoCallAccept',
+  videoCallReject = 'VideoCallReject',
+  videoCallHangup = 'VideoCallHangup',
+}
+
+export interface IAcceptVideoCallPayload {
+  receiverId: number;
+  callerId: number;
+  dialogId: number;
+}
+
+export interface IRejectVideoCallPayload {
+  receiverId: number;
+  caller: IUser;
+  dialogId: number;
 }

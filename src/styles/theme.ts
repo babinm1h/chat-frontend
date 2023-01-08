@@ -38,7 +38,7 @@ export const LightTheme = {
   },
   background: {
     icon: '#858585',
-    primary: `rgba(0,0,0, 0.1)`,
+    primary: `#fff`,
     secondary: '#fff',
     tertiary: `rgba(0,0,0, 0.12)`,
     hover: `rgba(0,0,0, 0.1)`,

@@ -41,7 +41,7 @@ interface IProps {
   bottomRef: React.RefObject<HTMLSpanElement>;
 }
 
-const DialogMessages: FC<IProps> = ({ messages, user, bottomRef }) => {
+const DialogMessages: FC<IProps> = ({ messages, user, bottomRef, }) => {
   const dispatch = useAppDispatch();
   const [activeAudio, setActiveAudio] = useState<IAttachment | null>(null);
   const [fetchReadMessage] = useReadMessageMutation();

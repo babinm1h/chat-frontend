@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { userSelector } from '../../redux/slices/auth.slice';
 import { fetchDialogById } from '../../redux/thunks/dialogs.thunks';
 import { SocketEvents } from '../../types/socketEvents.types';
 import { useAppDispatch } from '../useAppDispatch';
@@ -12,7 +13,8 @@ export const useDialog = () => {
   const { activeDialog, isActiveDialogFetching, activeDialogError, editableMessage, replyToMsg } = useAppSelector(
     (state) => state.dialogs,
   );
-  const { user } = useAppSelector((state) => state.auth);
+  const user = useAppSelector(userSelector);
+  const { peer, isCalling, callDialogId } = useAppSelector((state) => state.call);
   const socket = useSocket();
   const { id } = useParams();
   const bottomRef = useRef<HTMLSpanElement>(null);
@@ -53,5 +55,8 @@ export const useDialog = () => {
     editableMessage,
     replyToMsg,
     bottomRef,
+    peer,
+    isCalling,
+    callDialogId,
   };
 };
