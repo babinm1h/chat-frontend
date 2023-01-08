@@ -4,7 +4,7 @@ import { createApi } from '@reduxjs/toolkit/dist/query/react';
 import { getTokenCookie } from '../../utils/cookie.helpers';
 
 export const baseQuery = fetchBaseQuery({
-  baseUrl: `http://localhost:7777/`,
+  baseUrl: process.env.REACT_APP_API_URL,
   credentials: 'include',
   prepareHeaders: (headers, api) => {
     const token = getTokenCookie();
